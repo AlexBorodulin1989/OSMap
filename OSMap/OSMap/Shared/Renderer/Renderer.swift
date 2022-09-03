@@ -13,8 +13,8 @@ class Renderer: NSObject {
     static var library: MTLLibrary!
     var pipelineState: MTLRenderPipelineState!
 
-    lazy var quad: Quad = {
-        Quad(device: Self.device)
+    lazy var frame: Frame = {
+        Frame(device: Self.device)
     }()
 
     init(metalView: MTKView) {
@@ -76,8 +76,10 @@ extension Renderer: MTKViewDelegate {
 
         renderEncoder.setRenderPipelineState(pipelineState)
 
-        renderEncoder.setVertexBuffer(quad.vertexBuffer, offset: 0, index: 0)
-        renderEncoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: quad.vertices.count)
+        renderEncoder.setVertexBuffer(frame.vertexBuffer, offset: 0, index: 0)
+        renderEncoder.setVertexBuffer(frame.indexBuffer, offset: 0, index: 1)
+        renderEncoder.drawPrimitives(type: .triangle,
+                                     vertexStart: 0, vertexCount: frame.indices.count)
 
         renderEncoder.endEncoding()
         guard let drawable = view.currentDrawable else {

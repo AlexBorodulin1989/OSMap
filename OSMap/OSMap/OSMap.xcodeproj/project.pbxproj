@@ -17,8 +17,8 @@
 		9DC6560928C376AA009906BA /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC655DF28C376A9009906BA /* ContentView.swift */; };
 		9DC6560A28C376AA009906BA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9DC655E028C376A9009906BA /* Assets.xcassets */; };
 		9DC6560B28C376AA009906BA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9DC655E028C376A9009906BA /* Assets.xcassets */; };
-		9DC6561F28C39567009906BA /* Quad.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC6561E28C39567009906BA /* Quad.swift */; };
-		9DC6562028C39567009906BA /* Quad.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC6561E28C39567009906BA /* Quad.swift */; };
+		9DC6561F28C39567009906BA /* Frame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC6561E28C39567009906BA /* Frame.swift */; };
+		9DC6562028C39567009906BA /* Frame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC6561E28C39567009906BA /* Frame.swift */; };
 		9DC6562328C395BF009906BA /* Shader.metal in Sources */ = {isa = PBXBuildFile; fileRef = 9DC6562228C395BF009906BA /* Shader.metal */; };
 		9DC6562428C395BF009906BA /* Shader.metal in Sources */ = {isa = PBXBuildFile; fileRef = 9DC6562228C395BF009906BA /* Shader.metal */; };
 		9DC6562728C3969A009906BA /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC6562628C3969A009906BA /* Renderer.swift */; };
@@ -57,7 +57,7 @@
 		9DC655FE28C376AA009906BA /* Tests macOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Tests macOS.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9DC6560228C376AA009906BA /* Tests_macOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests_macOS.swift; sourceTree = "<group>"; };
 		9DC6560428C376AA009906BA /* Tests_macOSLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests_macOSLaunchTests.swift; sourceTree = "<group>"; };
-		9DC6561E28C39567009906BA /* Quad.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Quad.swift; sourceTree = "<group>"; };
+		9DC6561E28C39567009906BA /* Frame.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Frame.swift; sourceTree = "<group>"; };
 		9DC6562228C395BF009906BA /* Shader.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = Shader.metal; sourceTree = "<group>"; };
 		9DC6562628C3969A009906BA /* Renderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
 		9DC6562A28C398A3009906BA /* MetalView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MetalView.swift; sourceTree = "<group>"; };
@@ -160,7 +160,7 @@
 		9DC6561D28C3954F009906BA /* Primitives */ = {
 			isa = PBXGroup;
 			children = (
-				9DC6561E28C39567009906BA /* Quad.swift */,
+				9DC6561E28C39567009906BA /* Frame.swift */,
 			);
 			path = Primitives;
 			sourceTree = "<group>";
@@ -349,7 +349,7 @@
 			files = (
 				9DC6562B28C398A3009906BA /* MetalView.swift in Sources */,
 				9DC6562328C395BF009906BA /* Shader.metal in Sources */,
-				9DC6561F28C39567009906BA /* Quad.swift in Sources */,
+				9DC6561F28C39567009906BA /* Frame.swift in Sources */,
 				9DC6560828C376AA009906BA /* ContentView.swift in Sources */,
 				9DC6562728C3969A009906BA /* Renderer.swift in Sources */,
 				9DC6560628C376AA009906BA /* OSMapApp.swift in Sources */,
@@ -362,7 +362,7 @@
 			files = (
 				9DC6562C28C398A3009906BA /* MetalView.swift in Sources */,
 				9DC6562428C395BF009906BA /* Shader.metal in Sources */,
-				9DC6562028C39567009906BA /* Quad.swift in Sources */,
+				9DC6562028C39567009906BA /* Frame.swift in Sources */,
 				9DC6560928C376AA009906BA /* ContentView.swift in Sources */,
 				9DC6562828C3969A009906BA /* Renderer.swift in Sources */,
 				9DC6560728C376AA009906BA /* OSMapApp.swift in Sources */,
