@@ -1,56 +1,60 @@
+//
+//  MetalView.swift
+//  Pipeline
+//
+//  Created by Aleksandr Borodulin on 03.09.2022.
+//
+
 import SwiftUI
 import MetalKit
 
-struct MetalView: View {
-    @State private var renderer: Renderer?
-    @State private var metalView = MTKView()
-
-    var body: some View {
-        VStack {
-            MetalViewRepresentable(
-                renderer: renderer,
-                metalView: $metalView)
-            .onAppear {
-                renderer = Renderer(
-                    metalView: metalView)
-            }
-        }
-    }
-}
-
 #if os(macOS)
 typealias ViewRepresentable = NSViewRepresentable
-typealias MyMetalView = NSView
+typealias UniversalView = NSView
 #elseif os(iOS)
 typealias ViewRepresentable = UIViewRepresentable
-typealias MyMetalView = UIView
+typealias UniversalView = UIView
 #endif
 
-struct MetalViewRepresentable: ViewRepresentable {
-    let renderer: Renderer?
-    @Binding var metalView: MTKView
+struct MetalView: ViewRepresentable {
+    @State private var metalView = MTKView()
 
 #if os(macOS)
     func makeNSView(context: Context) -> some NSView {
-        metalView
+        makeView()
     }
     func updateNSView(_ uiView: NSViewType, context: Context) {
-        updateMetalView()
     }
 #elseif os(iOS)
     func makeUIView(context: Context) -> MTKView {
-        metalView
+        makeView() as! MTKView
     }
 
     func updateUIView(_ uiView: MTKView, context: Context) {
-        updateMetalView()
     }
 #endif
 
-    func makeMetalView(_ metalView: MyMetalView) {
+    func makeView() -> UniversalView {
+
+        return metalView
     }
 
-    func updateMetalView() {
+    func makeCoordinator() -> Coordinator {
+        Coordinator(self)
+    }
+
+    class Coordinator: NSObject {
+        let parent: MetalView
+
+        private var renderer: Renderer!
+
+        init(_ parent: MetalView) {
+            self.parent = parent
+
+            super.init()
+
+            renderer = Renderer(metalView: parent.metalView)
+        }
     }
 }
 
@@ -58,7 +62,6 @@ struct MetalView_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
             MetalView()
-            Text("Metal View")
         }
     }
 }
