@@ -8,26 +8,32 @@
 import MetalKit
 
 class Renderer: NSObject {
-    static var device: MTLDevice!
-    static var commandQueue: MTLCommandQueue!
-    static var library: MTLLibrary!
+    private var device: MTLDevice!
+    private var commandQueue: MTLCommandQueue!
+
+    private var library: MTLLibrary!
     var pipelineState: MTLRenderPipelineState!
 
     lazy var frame: Frame = {
-        Frame(device: Self.device)
+        Frame(device: device)
     }()
 
+    private override init() {
+        super.init()
+    }
+
     init(metalView: MTKView) {
+        super.init()
+
         guard
             let device = MTLCreateSystemDefaultDevice(),
             let commandQueue = device.makeCommandQueue() else {
             fatalError("GPU not available")
         }
-        Self.device = device
-        Self.commandQueue = commandQueue
-        metalView.device = device
 
-        super.init()
+        self.device = device
+        self.commandQueue = commandQueue
+        metalView.device = device
 
         self.addPipeline(metalView: metalView)
 
@@ -41,8 +47,7 @@ class Renderer: NSObject {
 
 extension Renderer {
     func addPipeline(metalView: MTKView) {
-        let library = Self.device.makeDefaultLibrary()
-        Self.library = library
+        library = device.makeDefaultLibrary()
         let vertexFunction = library?.makeFunction(name: "map_vertex")
         let fragmentFunction = library?.makeFunction(name: "map_fragment")
 
@@ -52,7 +57,7 @@ extension Renderer {
         pipelineDescriptor.colorAttachments[0].pixelFormat = metalView.colorPixelFormat
 
         do {
-            pipelineState = try Self.device.makeRenderPipelineState(descriptor: pipelineDescriptor)
+            pipelineState = try device.makeRenderPipelineState(descriptor: pipelineDescriptor)
         } catch let error {
             fatalError(error.localizedDescription)
         }
@@ -67,7 +72,7 @@ extension Renderer: MTKViewDelegate {
 
     func draw(in view: MTKView) {
         guard
-            let commandBuffer = Renderer.commandQueue.makeCommandBuffer(),
+            let commandBuffer = commandQueue.makeCommandBuffer(),
             let descriptor = view.currentRenderPassDescriptor,
             let renderEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: descriptor)
         else {

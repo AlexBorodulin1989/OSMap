@@ -35,7 +35,6 @@ struct MetalView: ViewRepresentable {
 #endif
 
     func makeView() -> UniversalView {
-
         return metalView
     }
 
