@@ -8,7 +8,7 @@
 import MetalKit
 
 class RenderEngine: NSObject {
-    private var device: MTLDevice!
+    private weak var mtkView: MTKView?
     private var commandQueue: MTLCommandQueue!
 
     private var library: MTLLibrary!
@@ -20,15 +20,16 @@ class RenderEngine: NSObject {
         super.init()
     }
 
-    init(metalView: MTKView) {
+    init(mtkView: MTKView) {
         super.init()
+
+        self.mtkView = mtkView
 
         guard
             let device = MTLCreateSystemDefaultDevice()
         else {
             fatalError("Fatal error: cannot create Device")
         }
-        self.device = device
 
         guard
             let commandQueue = device.makeCommandQueue()
@@ -37,21 +38,23 @@ class RenderEngine: NSObject {
         }
         self.commandQueue = commandQueue
 
-        metalView.device = device
+        self.mtkView?.device = device
 
-        metalView.clearColor = MTLClearColor(red: 1.0,
+        self.mtkView?.clearColor = MTLClearColor(red: 1.0,
                                              green: 1.0,
                                              blue: 1.0,
                                              alpha: 1.0)
 
-        metalView.delegate = self
+        self.mtkView?.delegate = self
     }
 }
 
 extension RenderEngine {
     func addPrimitive(_ primitive: Primitive) {
-        let renderUnit = RenderUnit(primitive: primitive, device: device)
-        renderUnits.append(renderUnit)
+        if let mtkView = mtkView {
+            let renderUnit = RenderUnit(primitive: primitive, mtkView: mtkView)
+            renderUnits.append(renderUnit)
+        }
     }
 }
 
@@ -70,12 +73,12 @@ extension RenderEngine: MTKViewDelegate {
             return
         }
 
-        renderUnits.forEach {[weak renderEncoder] renderUnit in
-            renderEncoder?.setRenderPipelineState(renderUnit.pipelineState)
+        renderUnits.forEach {renderUnit in
+            renderEncoder.setRenderPipelineState(renderUnit.pipelineState)
 
-            renderEncoder?.setVertexBuffer(renderUnit.vertBuffer, offset: 0, index: 0)
+            renderEncoder.setVertexBuffer(renderUnit.vertBuffer, offset: 0, index: 0)
 
-            renderEncoder?.drawIndexedPrimitives(type: .triangle,
+            renderEncoder.drawIndexedPrimitives(type: .triangle,
                                                 indexCount: 6,
                                                 indexType: .uint16,
                                                 indexBuffer: renderUnit.indexBuffer,

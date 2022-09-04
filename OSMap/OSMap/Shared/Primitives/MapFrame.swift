@@ -9,6 +9,8 @@ import MetalKit
 
 struct MapFrame: Primitive {
 
+    static let group: String = "MapFrame"
+
     var verts: [Float] = [
         -1, 1, 0,
          1, 1, 0,
@@ -34,6 +36,4 @@ struct MapFrame: Primitive {
         vertDescriptor.layouts[0].stride = stride
         return vertDescriptor
     }
-
-    static let group: String = "MapFrame"
 }
