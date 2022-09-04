@@ -38,13 +38,18 @@ class RenderUnit {
 
 extension RenderUnit {
     func addPipelineDescriptor(primitive: Primitive, mtkView: MTKView) {
-        let library = mtkView.device?.makeDefaultLibrary()
-        let vertexFunction = library?.makeFunction(name: "map_vertex")
-        let fragmentFunction = library?.makeFunction(name: "map_fragment")
+        guard let device = mtkView.device
+        else {
+            fatalError("Fatal error: device not found")
+        }
+
+        let shaderInfo = ShaderManager.shared.getShaderInfo(for: primitive.vertShader,
+                                                            fragName: primitive.fragShader,
+                                                            for: device)
 
         let pipelineDescriptor = MTLRenderPipelineDescriptor()
-        pipelineDescriptor.vertexFunction = vertexFunction
-        pipelineDescriptor.fragmentFunction = fragmentFunction
+        pipelineDescriptor.vertexFunction = shaderInfo.vertFunc
+        pipelineDescriptor.fragmentFunction = shaderInfo.fragFunc
         pipelineDescriptor.colorAttachments[0].pixelFormat = mtkView.colorPixelFormat
         pipelineDescriptor.vertexDescriptor = primitive.vertexDescriptor
 

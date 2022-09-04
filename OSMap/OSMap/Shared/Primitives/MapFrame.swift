@@ -36,4 +36,10 @@ struct MapFrame: Primitive {
         vertDescriptor.layouts[0].stride = stride
         return vertDescriptor
     }
+
+    init(scale: Float) {
+        verts = verts.map {
+            $0 * scale
+        }
+    }
 }

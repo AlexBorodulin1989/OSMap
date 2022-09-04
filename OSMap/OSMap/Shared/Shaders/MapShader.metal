@@ -18,6 +18,6 @@ vertex float4 map_vertex(MapVertex vert [[stage_in]],
     return vert.pos;
 }
 
-fragment float4 map_fragment() {
-    return float4(0, 0, 1, 1);
+fragment float4 map_fragment(constant float &timer [[buffer(5)]]) {
+    return float4(0, 0, timer, 1);
 }

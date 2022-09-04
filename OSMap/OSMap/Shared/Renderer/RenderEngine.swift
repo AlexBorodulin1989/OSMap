@@ -16,6 +16,8 @@ class RenderEngine: NSObject {
 
     private var renderUnits = [RenderUnit]()
 
+    var timer: Float = 0
+
     private override init() {
         super.init()
     }
@@ -73,10 +75,19 @@ extension RenderEngine: MTKViewDelegate {
             return
         }
 
+        var index: Float = 0
+
         renderUnits.forEach {renderUnit in
+            index += 1
             renderEncoder.setRenderPipelineState(renderUnit.pipelineState)
 
             renderEncoder.setVertexBuffer(renderUnit.vertBuffer, offset: 0, index: 0)
+
+
+            timer += 0.005
+            var currentTime = sin(timer * index)
+            renderEncoder.setFragmentBytes( &currentTime,
+            length: MemoryLayout<Float>.stride, index: 5)
 
             renderEncoder.drawIndexedPrimitives(type: .triangle,
                                                 indexCount: 6,
