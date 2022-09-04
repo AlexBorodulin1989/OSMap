@@ -1,5 +1,5 @@
 //
-//  MetalView.swift
+//  OSMapApp.swift
 //  Pipeline
 //
 //  Created by Aleksandr Borodulin on 03.09.2022.

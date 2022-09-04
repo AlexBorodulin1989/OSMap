@@ -1,5 +1,5 @@
 //
-//  MetalView.swift
+//  RenderEngine.swift
 //  Pipeline
 //
 //  Created by Aleksandr Borodulin on 03.09.2022.
@@ -7,7 +7,7 @@
 
 import MetalKit
 
-class Renderer: NSObject {
+class RenderEngine: NSObject {
     private var device: MTLDevice!
     private var commandQueue: MTLCommandQueue!
 
@@ -45,7 +45,7 @@ class Renderer: NSObject {
     }
 }
 
-extension Renderer {
+extension RenderEngine {
     func addPipeline(metalView: MTKView) {
         library = device.makeDefaultLibrary()
         let vertexFunction = library?.makeFunction(name: "map_vertex")
@@ -65,7 +65,7 @@ extension Renderer {
     }
 }
 
-extension Renderer: MTKViewDelegate {
+extension RenderEngine: MTKViewDelegate {
     func mtkView(_ view: MTKView,
                  drawableSizeWillChange size: CGSize
     ) {

@@ -1,5 +1,5 @@
 //
-//  MetalView.swift
+//  OSMapView.swift
 //  Pipeline
 //
 //  Created by Aleksandr Borodulin on 03.09.2022.
@@ -45,14 +45,14 @@ struct OSMapView: ViewRepresentable {
     class Coordinator: NSObject {
         let parent: OSMapView
 
-        private var renderer: Renderer!
+        private var renderer: RenderEngine!
 
         init(_ parent: OSMapView) {
             self.parent = parent
 
             super.init()
 
-            renderer = Renderer(metalView: parent.metalView)
+            renderer = RenderEngine(metalView: parent.metalView)
         }
     }
 }
