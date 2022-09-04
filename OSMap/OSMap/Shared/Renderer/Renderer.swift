@@ -37,9 +37,9 @@ class Renderer: NSObject {
 
         self.addPipeline(metalView: metalView)
 
-        metalView.clearColor = MTLClearColor(red: 1.0,
-                                             green: 1.0,
-                                             blue: 0.8,
+        metalView.clearColor = MTLClearColor(red: 0.9,
+                                             green: 0.9,
+                                             blue: 0.9,
                                              alpha: 1.0)
         metalView.delegate = self
     }
@@ -55,6 +55,7 @@ extension Renderer {
         pipelineDescriptor.vertexFunction = vertexFunction
         pipelineDescriptor.fragmentFunction = fragmentFunction
         pipelineDescriptor.colorAttachments[0].pixelFormat = metalView.colorPixelFormat
+        pipelineDescriptor.vertexDescriptor = frame.vertexDescriptor
 
         do {
             pipelineState = try device.makeRenderPipelineState(descriptor: pipelineDescriptor)
@@ -82,9 +83,12 @@ extension Renderer: MTKViewDelegate {
         renderEncoder.setRenderPipelineState(pipelineState)
 
         renderEncoder.setVertexBuffer(frame.vertexBuffer, offset: 0, index: 0)
-        renderEncoder.setVertexBuffer(frame.indexBuffer, offset: 0, index: 1)
-        renderEncoder.drawPrimitives(type: .triangle,
-                                     vertexStart: 0, vertexCount: frame.indices.count)
+
+        renderEncoder.drawIndexedPrimitives(type: .triangle,
+                                            indexCount: frame.indices.count,
+                                            indexType: .uint16,
+                                            indexBuffer: frame.indexBuffer,
+                                            indexBufferOffset: 0)
 
         renderEncoder.endEncoding()
         guard let drawable = view.currentDrawable else {

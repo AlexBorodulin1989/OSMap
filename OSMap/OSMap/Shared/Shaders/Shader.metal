@@ -9,13 +9,10 @@
 using namespace metal;
 
 
-vertex float4 map_vertex(constant packed_float3 *vertices [[buffer(0)]],
-                         constant ushort *indices [[buffer(1)]],
+vertex float4 map_vertex(float4 pos [[attribute(0)]] [[stage_in]],
                          uint vertexID [[vertex_id]])
 {
-    ushort index = indices[vertexID];
-    float4 position = float4(vertices[index], 1);
-    return position;
+    return pos;
 }
 
 fragment float4 map_fragment() {

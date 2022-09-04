@@ -95,6 +95,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		9D3EEF6F28C48FBF00F03F48 /* Example */ = {
+			isa = PBXGroup;
+			children = (
+				9DC655DE28C376A9009906BA /* OSMapApp.swift */,
+				9DC655DF28C376A9009906BA /* ContentView.swift */,
+			);
+			path = Example;
+			sourceTree = "<group>";
+		};
 		9DC655D828C376A9009906BA = {
 			isa = PBXGroup;
 			children = (
@@ -109,12 +118,11 @@
 		9DC655DD28C376A9009906BA /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				9D3EEF6F28C48FBF00F03F48 /* Example */,
 				9DC6562928C39897009906BA /* MetalView */,
 				9DC6562528C39675009906BA /* Renderer */,
 				9DC6562128C395A0009906BA /* Shaders */,
 				9DC6561D28C3954F009906BA /* Primitives */,
-				9DC655DE28C376A9009906BA /* OSMapApp.swift */,
-				9DC655DF28C376A9009906BA /* ContentView.swift */,
 				9DC655E028C376A9009906BA /* Assets.xcassets */,
 			);
 			path = Shared;

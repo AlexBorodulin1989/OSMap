@@ -20,6 +20,17 @@ struct Frame {
         0, 1, 3
     ]
 
+    lazy var vertexDescriptor: MTLVertexDescriptor = {
+        let vertDescriptor = MTLVertexDescriptor()
+        vertDescriptor.attributes[0].format = .float3
+        vertDescriptor.attributes[0].offset = 0
+        vertDescriptor.attributes[0].bufferIndex = 0
+
+        let stride = MemoryLayout<Float>.stride * 3
+        vertDescriptor.layouts[0].stride = stride
+        return vertDescriptor
+    }()
+
     let vertexBuffer: MTLBuffer
     let indexBuffer: MTLBuffer
 
