@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		9D3EEF7828C4E2FB00F03F48 /* Primitive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D3EEF7728C4E2FB00F03F48 /* Primitive.swift */; };
 		9D3EEF7928C4E2FB00F03F48 /* Primitive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D3EEF7728C4E2FB00F03F48 /* Primitive.swift */; };
+		9D3EEF7B28C4E3EE00F03F48 /* RenderUnit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D3EEF7A28C4E3EE00F03F48 /* RenderUnit.swift */; };
+		9D3EEF7C28C4E3EE00F03F48 /* RenderUnit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D3EEF7A28C4E3EE00F03F48 /* RenderUnit.swift */; };
 		9DC655F728C376AA009906BA /* Tests_iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC655F628C376AA009906BA /* Tests_iOS.swift */; };
 		9DC655F928C376AA009906BA /* Tests_iOSLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC655F828C376AA009906BA /* Tests_iOSLaunchTests.swift */; };
 		9DC6560328C376AA009906BA /* Tests_macOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC6560228C376AA009906BA /* Tests_macOS.swift */; };
@@ -48,6 +50,7 @@
 
 /* Begin PBXFileReference section */
 		9D3EEF7728C4E2FB00F03F48 /* Primitive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Primitive.swift; sourceTree = "<group>"; };
+		9D3EEF7A28C4E3EE00F03F48 /* RenderUnit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenderUnit.swift; sourceTree = "<group>"; };
 		9DC655DE28C376A9009906BA /* OSMapApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSMapApp.swift; sourceTree = "<group>"; };
 		9DC655DF28C376A9009906BA /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		9DC655E028C376A9009906BA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -189,6 +192,7 @@
 			isa = PBXGroup;
 			children = (
 				9DC6562628C3969A009906BA /* RenderEngine.swift */,
+				9D3EEF7A28C4E3EE00F03F48 /* RenderUnit.swift */,
 			);
 			path = Renderer;
 			sourceTree = "<group>";
@@ -362,6 +366,7 @@
 				9DC6562B28C398A3009906BA /* OSMapView.swift in Sources */,
 				9DC6562328C395BF009906BA /* MapShader.metal in Sources */,
 				9DC6561F28C39567009906BA /* MapFrame.swift in Sources */,
+				9D3EEF7B28C4E3EE00F03F48 /* RenderUnit.swift in Sources */,
 				9D3EEF7828C4E2FB00F03F48 /* Primitive.swift in Sources */,
 				9DC6560828C376AA009906BA /* ContentView.swift in Sources */,
 				9DC6562728C3969A009906BA /* RenderEngine.swift in Sources */,
@@ -376,6 +381,7 @@
 				9DC6562C28C398A3009906BA /* OSMapView.swift in Sources */,
 				9DC6562428C395BF009906BA /* MapShader.metal in Sources */,
 				9DC6562028C39567009906BA /* MapFrame.swift in Sources */,
+				9D3EEF7C28C4E3EE00F03F48 /* RenderUnit.swift in Sources */,
 				9D3EEF7928C4E2FB00F03F48 /* Primitive.swift in Sources */,
 				9DC6560928C376AA009906BA /* ContentView.swift in Sources */,
 				9DC6562828C3969A009906BA /* RenderEngine.swift in Sources */,

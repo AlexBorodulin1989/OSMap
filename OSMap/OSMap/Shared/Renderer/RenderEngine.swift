@@ -14,9 +14,7 @@ class RenderEngine: NSObject {
     private var library: MTLLibrary!
     var pipelineState: MTLRenderPipelineState!
 
-    lazy var frame: MapFrame = {
-        MapFrame(device: device)
-    }()
+    private var renderUnits = [RenderUnit]()
 
     private override init() {
         super.init()
@@ -26,42 +24,34 @@ class RenderEngine: NSObject {
         super.init()
 
         guard
-            let device = MTLCreateSystemDefaultDevice(),
-            let commandQueue = device.makeCommandQueue() else {
-            fatalError("GPU not available")
+            let device = MTLCreateSystemDefaultDevice()
+        else {
+            fatalError("Fatal error: cannot create Device")
         }
-
         self.device = device
+
+        guard
+            let commandQueue = device.makeCommandQueue()
+        else {
+            fatalError("Fatal error: cannot create Queue")
+        }
         self.commandQueue = commandQueue
+
         metalView.device = device
 
-        self.addPipeline(metalView: metalView)
-
-        metalView.clearColor = MTLClearColor(red: 0.9,
-                                             green: 0.9,
-                                             blue: 0.9,
+        metalView.clearColor = MTLClearColor(red: 1.0,
+                                             green: 1.0,
+                                             blue: 1.0,
                                              alpha: 1.0)
+
         metalView.delegate = self
     }
 }
 
 extension RenderEngine {
-    func addPipeline(metalView: MTKView) {
-        library = device.makeDefaultLibrary()
-        let vertexFunction = library?.makeFunction(name: "map_vertex")
-        let fragmentFunction = library?.makeFunction(name: "map_fragment")
-
-        let pipelineDescriptor = MTLRenderPipelineDescriptor()
-        pipelineDescriptor.vertexFunction = vertexFunction
-        pipelineDescriptor.fragmentFunction = fragmentFunction
-        pipelineDescriptor.colorAttachments[0].pixelFormat = metalView.colorPixelFormat
-        pipelineDescriptor.vertexDescriptor = frame.vertexDescriptor
-
-        do {
-            pipelineState = try device.makeRenderPipelineState(descriptor: pipelineDescriptor)
-        } catch let error {
-            fatalError(error.localizedDescription)
-        }
+    func addPrimitive(_ primitive: Primitive) {
+        let renderUnit = RenderUnit(primitive: primitive, device: device)
+        renderUnits.append(renderUnit)
     }
 }
 
@@ -80,15 +70,17 @@ extension RenderEngine: MTKViewDelegate {
             return
         }
 
-        renderEncoder.setRenderPipelineState(pipelineState)
+        renderUnits.forEach {[weak renderEncoder] renderUnit in
+            renderEncoder?.setRenderPipelineState(renderUnit.pipelineState)
 
-        renderEncoder.setVertexBuffer(frame.vertBuffer, offset: 0, index: 0)
+            renderEncoder?.setVertexBuffer(renderUnit.vertBuffer, offset: 0, index: 0)
 
-        renderEncoder.drawIndexedPrimitives(type: .triangle,
-                                            indexCount: frame.indices.count,
-                                            indexType: .uint16,
-                                            indexBuffer: frame.indexBuffer,
-                                            indexBufferOffset: 0)
+            renderEncoder?.drawIndexedPrimitives(type: .triangle,
+                                                indexCount: 6,
+                                                indexType: .uint16,
+                                                indexBuffer: renderUnit.indexBuffer,
+                                                indexBufferOffset: 0)
+        }
 
         renderEncoder.endEncoding()
         guard let drawable = view.currentDrawable else {

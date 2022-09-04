@@ -7,7 +7,8 @@
 
 import MetalKit
 
-struct MapFrame {
+struct MapFrame: Primitive {
+
     var verts: [Float] = [
         -1, 1, 0,
          1, 1, 0,
@@ -20,7 +21,10 @@ struct MapFrame {
         0, 1, 3
     ]
 
-    lazy var vertexDescriptor: MTLVertexDescriptor = {
+    let vertShader: String = "map_vertex"
+    let fragShader: String = "map_fragment"
+
+    var vertexDescriptor: MTLVertexDescriptor {
         let vertDescriptor = MTLVertexDescriptor()
         vertDescriptor.attributes[0].format = .float3
         vertDescriptor.attributes[0].offset = 0
@@ -29,25 +33,7 @@ struct MapFrame {
         let stride = MemoryLayout<Float>.stride * 3
         vertDescriptor.layouts[0].stride = stride
         return vertDescriptor
-    }()
-
-    let vertBuffer: MTLBuffer
-    let indexBuffer: MTLBuffer
-
-    init(device: MTLDevice) {
-        guard let vertexBuffer = device.makeBuffer(bytes: &verts,
-                                                   length: MemoryLayout<Float>.stride * verts.count)
-        else {
-            fatalError("Creating vertex buffer failed")
-        }
-
-        self.vertBuffer = vertexBuffer
-
-        guard let indexBuffer = device.makeBuffer(bytes: &indices,
-                                                  length: MemoryLayout<UInt16>.stride * indices.count)
-        else {
-            fatalError("Creating index buffer failed")
-        }
-        self.indexBuffer = indexBuffer
     }
+
+    static let group: String = "MapFrame"
 }

@@ -8,6 +8,13 @@
 import MetalKit
 
 protocol Primitive {
-    var vertBuffer: MTLBuffer { get }
-    var indexBuffer: MTLBuffer { get }
+    static var group: String { get }
+
+    var vertexDescriptor: MTLVertexDescriptor { get }
+
+    var verts: [Float] { get }
+    var indices: [UInt16] { get }
+
+    var vertShader: String { get }
+    var fragShader: String { get }
 }

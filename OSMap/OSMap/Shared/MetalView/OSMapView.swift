@@ -53,6 +53,7 @@ struct OSMapView: ViewRepresentable {
             super.init()
 
             renderer = RenderEngine(metalView: parent.metalView)
+            renderer.addPrimitive(MapFrame())
         }
     }
 }
