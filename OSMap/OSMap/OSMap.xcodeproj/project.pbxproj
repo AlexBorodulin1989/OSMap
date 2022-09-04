@@ -19,8 +19,8 @@
 		9DC6560B28C376AA009906BA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9DC655E028C376A9009906BA /* Assets.xcassets */; };
 		9DC6561F28C39567009906BA /* Frame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC6561E28C39567009906BA /* Frame.swift */; };
 		9DC6562028C39567009906BA /* Frame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC6561E28C39567009906BA /* Frame.swift */; };
-		9DC6562328C395BF009906BA /* Shader.metal in Sources */ = {isa = PBXBuildFile; fileRef = 9DC6562228C395BF009906BA /* Shader.metal */; };
-		9DC6562428C395BF009906BA /* Shader.metal in Sources */ = {isa = PBXBuildFile; fileRef = 9DC6562228C395BF009906BA /* Shader.metal */; };
+		9DC6562328C395BF009906BA /* MapShader.metal in Sources */ = {isa = PBXBuildFile; fileRef = 9DC6562228C395BF009906BA /* MapShader.metal */; };
+		9DC6562428C395BF009906BA /* MapShader.metal in Sources */ = {isa = PBXBuildFile; fileRef = 9DC6562228C395BF009906BA /* MapShader.metal */; };
 		9DC6562728C3969A009906BA /* RenderEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC6562628C3969A009906BA /* RenderEngine.swift */; };
 		9DC6562828C3969A009906BA /* RenderEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC6562628C3969A009906BA /* RenderEngine.swift */; };
 		9DC6562B28C398A3009906BA /* OSMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC6562A28C398A3009906BA /* OSMapView.swift */; };
@@ -58,7 +58,7 @@
 		9DC6560228C376AA009906BA /* Tests_macOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests_macOS.swift; sourceTree = "<group>"; };
 		9DC6560428C376AA009906BA /* Tests_macOSLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests_macOSLaunchTests.swift; sourceTree = "<group>"; };
 		9DC6561E28C39567009906BA /* Frame.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Frame.swift; sourceTree = "<group>"; };
-		9DC6562228C395BF009906BA /* Shader.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = Shader.metal; sourceTree = "<group>"; };
+		9DC6562228C395BF009906BA /* MapShader.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = MapShader.metal; sourceTree = "<group>"; };
 		9DC6562628C3969A009906BA /* RenderEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RenderEngine.swift; sourceTree = "<group>"; };
 		9DC6562A28C398A3009906BA /* OSMapView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OSMapView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -176,7 +176,7 @@
 		9DC6562128C395A0009906BA /* Shaders */ = {
 			isa = PBXGroup;
 			children = (
-				9DC6562228C395BF009906BA /* Shader.metal */,
+				9DC6562228C395BF009906BA /* MapShader.metal */,
 			);
 			path = Shaders;
 			sourceTree = "<group>";
@@ -356,7 +356,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9DC6562B28C398A3009906BA /* OSMapView.swift in Sources */,
-				9DC6562328C395BF009906BA /* Shader.metal in Sources */,
+				9DC6562328C395BF009906BA /* MapShader.metal in Sources */,
 				9DC6561F28C39567009906BA /* Frame.swift in Sources */,
 				9DC6560828C376AA009906BA /* ContentView.swift in Sources */,
 				9DC6562728C3969A009906BA /* RenderEngine.swift in Sources */,
@@ -369,7 +369,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9DC6562C28C398A3009906BA /* OSMapView.swift in Sources */,
-				9DC6562428C395BF009906BA /* Shader.metal in Sources */,
+				9DC6562428C395BF009906BA /* MapShader.metal in Sources */,
 				9DC6562028C39567009906BA /* Frame.swift in Sources */,
 				9DC6560928C376AA009906BA /* ContentView.swift in Sources */,
 				9DC6562828C3969A009906BA /* RenderEngine.swift in Sources */,
