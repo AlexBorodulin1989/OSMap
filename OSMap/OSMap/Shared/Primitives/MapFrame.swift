@@ -1,5 +1,5 @@
 //
-//  Frame.swift
+//  MapFrame.swift
 //  Pipeline
 //
 //  Created by Aleksandr Borodulin on 03.09.2022.
@@ -7,8 +7,8 @@
 
 import MetalKit
 
-struct Frame {
-    var vertices: [Float] = [
+struct MapFrame {
+    var verts: [Float] = [
         -1, 1, 0,
          1, 1, 0,
          -1, -1, 0,
@@ -31,17 +31,17 @@ struct Frame {
         return vertDescriptor
     }()
 
-    let vertexBuffer: MTLBuffer
+    let vertBuffer: MTLBuffer
     let indexBuffer: MTLBuffer
 
     init(device: MTLDevice) {
-        guard let vertexBuffer = device.makeBuffer(bytes: &vertices,
-                                                   length: MemoryLayout<Float>.stride * vertices.count)
+        guard let vertexBuffer = device.makeBuffer(bytes: &verts,
+                                                   length: MemoryLayout<Float>.stride * verts.count)
         else {
             fatalError("Creating vertex buffer failed")
         }
 
-        self.vertexBuffer = vertexBuffer
+        self.vertBuffer = vertexBuffer
 
         guard let indexBuffer = device.makeBuffer(bytes: &indices,
                                                   length: MemoryLayout<UInt16>.stride * indices.count)

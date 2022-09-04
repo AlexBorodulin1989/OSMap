@@ -14,8 +14,8 @@ class RenderEngine: NSObject {
     private var library: MTLLibrary!
     var pipelineState: MTLRenderPipelineState!
 
-    lazy var frame: Frame = {
-        Frame(device: device)
+    lazy var frame: MapFrame = {
+        MapFrame(device: device)
     }()
 
     private override init() {
@@ -82,7 +82,7 @@ extension RenderEngine: MTKViewDelegate {
 
         renderEncoder.setRenderPipelineState(pipelineState)
 
-        renderEncoder.setVertexBuffer(frame.vertexBuffer, offset: 0, index: 0)
+        renderEncoder.setVertexBuffer(frame.vertBuffer, offset: 0, index: 0)
 
         renderEncoder.drawIndexedPrimitives(type: .triangle,
                                             indexCount: frame.indices.count,
