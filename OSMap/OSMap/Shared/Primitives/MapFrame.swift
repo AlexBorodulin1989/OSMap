@@ -23,8 +23,8 @@ struct MapFrame: Primitive {
         0, 1, 3
     ]
 
-    let vertShader: String = "map_vertex"
-    let fragShader: String = "map_fragment"
+    static var vertShader: String { "map_vertex" }
+    static var fragShader: String { "map_fragment" }
 
     var vertexDescriptor: MTLVertexDescriptor {
         let vertDescriptor = MTLVertexDescriptor()

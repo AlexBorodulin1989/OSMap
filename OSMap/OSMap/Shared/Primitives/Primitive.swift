@@ -8,6 +8,7 @@
 import MetalKit
 
 protocol Primitive {
+    // grouping by unique vertex, fragment shader, data format and memory layout
     static var group: String { get }
 
     var vertexDescriptor: MTLVertexDescriptor { get }
@@ -15,6 +16,6 @@ protocol Primitive {
     var verts: [Float] { get }
     var indices: [UInt16] { get }
 
-    var vertShader: String { get }
-    var fragShader: String { get }
+    static var vertShader: String { get }
+    static var fragShader: String { get }
 }

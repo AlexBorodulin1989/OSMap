@@ -43,8 +43,8 @@ extension RenderUnit {
             fatalError("Fatal error: device not found")
         }
 
-        let shaderInfo = ShaderManager.shared.getShaderInfo(for: primitive.vertShader,
-                                                            fragName: primitive.fragShader,
+        let shaderInfo = ShaderManager.shared.getShaderInfo(for: type(of: primitive).vertShader,
+                                                            fragName: type(of: primitive).fragShader,
                                                             for: device)
 
         let pipelineDescriptor = MTLRenderPipelineDescriptor()
