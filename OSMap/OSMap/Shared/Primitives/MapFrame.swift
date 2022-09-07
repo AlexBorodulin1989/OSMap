@@ -26,7 +26,7 @@ struct MapFrame: Primitive {
     static var vertShader: String { "map_vertex" }
     static var fragShader: String { "map_fragment" }
 
-    var vertexDescriptor: MTLVertexDescriptor {
+    static var vertexDescriptor: MTLVertexDescriptor {
         let vertDescriptor = MTLVertexDescriptor()
         vertDescriptor.attributes[0].format = .float3
         vertDescriptor.attributes[0].offset = 0

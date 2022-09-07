@@ -11,7 +11,7 @@ protocol Primitive {
     // grouping by unique vertex, fragment shader, data format and memory layout
     static var group: String { get }
 
-    var vertexDescriptor: MTLVertexDescriptor { get }
+    static var vertexDescriptor: MTLVertexDescriptor { get }
 
     var verts: [Float] { get }
     var indices: [UInt16] { get }

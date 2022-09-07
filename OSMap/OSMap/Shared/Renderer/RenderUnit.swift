@@ -14,9 +14,9 @@ class RenderUnit {
     let vertBuffer: MTLBuffer
     let indexBuffer: MTLBuffer
 
+    let primitiveType: Primitive.Type
+
     init(primitive: Primitive, mtkView: MTKView) {
-
-
         guard let vertexBuffer = mtkView.device?.makeBuffer(bytes: primitive.verts,
                                                             length: MemoryLayout<Float>.stride * primitive.verts.count)
         else {
@@ -32,31 +32,37 @@ class RenderUnit {
         }
         self.indexBuffer = indexBuffer
 
-        addPipelineDescriptor(primitive: primitive, mtkView: mtkView)
+        primitiveType = type(of: primitive)
+
+        pipelineState = pipelineState(mtkView: mtkView)
     }
 }
 
 extension RenderUnit {
-    func addPipelineDescriptor(primitive: Primitive, mtkView: MTKView) {
+    func pipelineState(mtkView: MTKView) -> MTLRenderPipelineState {
         guard let device = mtkView.device
         else {
             fatalError("Fatal error: device not found")
         }
 
-        let shaderInfo = ShaderManager.shared.getShaderInfo(for: type(of: primitive).vertShader,
-                                                            fragName: type(of: primitive).fragShader,
+        let shaderInfo = ShaderManager.shared.getShaderInfo(for: primitiveType.vertShader,
+                                                            fragName: primitiveType.fragShader,
                                                             for: device)
 
         let pipelineDescriptor = MTLRenderPipelineDescriptor()
         pipelineDescriptor.vertexFunction = shaderInfo.vertFunc
         pipelineDescriptor.fragmentFunction = shaderInfo.fragFunc
         pipelineDescriptor.colorAttachments[0].pixelFormat = mtkView.colorPixelFormat
-        pipelineDescriptor.vertexDescriptor = primitive.vertexDescriptor
+        pipelineDescriptor.vertexDescriptor = primitiveType.vertexDescriptor
+
+        let pipelineState: MTLRenderPipelineState!
 
         do {
             pipelineState = try mtkView.device?.makeRenderPipelineState(descriptor: pipelineDescriptor)
         } catch let error {
             fatalError(error.localizedDescription)
         }
+
+        return pipelineState
     }
 }
