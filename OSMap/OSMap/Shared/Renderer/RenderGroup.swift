@@ -8,8 +8,8 @@
 import MetalKit
 
 class RenderGroup {
-    private var renderUnits = [RenderUnit]()
-    private let pipelineState: MTLRenderPipelineState
+    private(set) var renderUnits = [RenderUnit]()
+    let pipelineState: MTLRenderPipelineState
 
     init(renderUnit: RenderUnit, mtkView: MTKView) {
         renderUnits = [renderUnit]

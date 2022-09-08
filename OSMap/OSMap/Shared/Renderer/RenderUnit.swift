@@ -45,13 +45,16 @@ extension RenderUnit {
             fatalError("Fatal error: device not found")
         }
 
-        let shaderInfo = ShaderManager.shared.getShaderInfo(for: primitiveType.vertShader,
-                                                            fragName: primitiveType.fragShader,
-                                                            for: device)
+        guard let library = device.makeDefaultLibrary(),
+              let vertFunc = library.makeFunction(name: primitiveType.vertShader),
+              let fragFunc = library.makeFunction(name: primitiveType.fragShader)
+        else {
+            fatalError("Fatal error: cannot make shader")
+        }
 
         let pipelineDescriptor = MTLRenderPipelineDescriptor()
-        pipelineDescriptor.vertexFunction = shaderInfo.vertFunc
-        pipelineDescriptor.fragmentFunction = shaderInfo.fragFunc
+        pipelineDescriptor.vertexFunction = vertFunc
+        pipelineDescriptor.fragmentFunction = fragFunc
         pipelineDescriptor.colorAttachments[0].pixelFormat = mtkView.colorPixelFormat
         pipelineDescriptor.vertexDescriptor = primitiveType.vertexDescriptor
 

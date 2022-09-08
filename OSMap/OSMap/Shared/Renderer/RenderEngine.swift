@@ -14,7 +14,7 @@ class RenderEngine: NSObject {
     private var library: MTLLibrary!
     var pipelineState: MTLRenderPipelineState!
 
-    private var renderUnits = [RenderUnit]()
+    private var renderGroups = [String: RenderGroup]()
 
     var timer: Float = 0
 
@@ -54,8 +54,14 @@ class RenderEngine: NSObject {
 extension RenderEngine {
     func addPrimitive(_ primitive: Primitive) {
         if let mtkView = mtkView {
+            let key = String(describing: type(of: primitive.self))
+
             let renderUnit = RenderUnit(primitive: primitive, mtkView: mtkView)
-            renderUnits.append(renderUnit)
+            if let renderGroup = renderGroups[key] {
+                renderGroup.addRenderUnit(renderUnit)
+            } else {
+                renderGroups[key] = RenderGroup(renderUnit: renderUnit, mtkView: mtkView)
+            }
         }
     }
 }
@@ -77,23 +83,25 @@ extension RenderEngine: MTKViewDelegate {
 
         var index: Float = 0
 
-        renderUnits.forEach {renderUnit in
-            index += 1
-            renderEncoder.setRenderPipelineState(renderUnit.pipelineState)
+        for (_, renderGroup) in renderGroups {
+            renderEncoder.setRenderPipelineState(renderGroup.pipelineState)
 
-            renderEncoder.setVertexBuffer(renderUnit.vertBuffer, offset: 0, index: 0)
+            renderGroup.renderUnits.forEach { renderUnit in
+                index += 1
+                renderEncoder.setVertexBuffer(renderUnit.vertBuffer, offset: 0, index: 0)
 
 
-            timer += 0.005
-            var currentTime = sin(timer * index)
-            renderEncoder.setFragmentBytes( &currentTime,
-            length: MemoryLayout<Float>.stride, index: 5)
+                timer += 0.005
+                var currentTime = sin(timer * index)
+                renderEncoder.setFragmentBytes( &currentTime,
+                length: MemoryLayout<Float>.stride, index: 5)
 
-            renderEncoder.drawIndexedPrimitives(type: .triangle,
-                                                indexCount: 6,
-                                                indexType: .uint16,
-                                                indexBuffer: renderUnit.indexBuffer,
-                                                indexBufferOffset: 0)
+                renderEncoder.drawIndexedPrimitives(type: .triangle,
+                                                    indexCount: 6,
+                                                    indexType: .uint16,
+                                                    indexBuffer: renderUnit.indexBuffer,
+                                                    indexBufferOffset: 0)
+            }
         }
 
         renderEncoder.endEncoding()
