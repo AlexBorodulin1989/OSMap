@@ -15,22 +15,12 @@ class RenderItem {
     let primitiveType: RenderEntity.Type
 
     init(entity: RenderEntity, device: MTLDevice) {
-        guard let vertexBuffer = device.makeBuffer(bytes: entity.verts,
-                                                   length: MemoryLayout<Float>.stride * entity.verts.count)
-        else {
-            fatalError("Fatal error: cannot create vertex buffer for Frame")
-        }
+        
 
-        self.vertBuffer = vertexBuffer
+        self.vertBuffer = entity.vertexBuffer(for: device)
+        self.indexBuffer = entity.indexBuffer(for: device)
 
-        guard let indexBuffer = device.makeBuffer(bytes: entity.indices,
-                                                  length: MemoryLayout<UInt16>.stride * entity.indices.count)
-        else {
-            fatalError("Fatal error: cannot create index buffer for Frame")
-        }
-        self.indexBuffer = indexBuffer
-
-        primitiveType = type(of: entity)
+        primitiveType = type(of: entity) // rename to entityType
     }
 }
 

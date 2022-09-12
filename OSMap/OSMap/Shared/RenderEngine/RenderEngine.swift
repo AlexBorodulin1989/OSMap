@@ -18,8 +18,6 @@ class RenderEngine: NSObject {
 
     private var renderGroups = [String: RenderGroup]()
 
-    var timer: Float = 0
-
     init(mtkView: MTKView) {
         guard
             let device = MTLCreateSystemDefaultDevice()
@@ -89,12 +87,6 @@ extension RenderEngine: MTKViewDelegate {
             renderGroup.renderUnits.forEach { renderUnit in
                 index += 1
                 renderEncoder.setVertexBuffer(renderUnit.vertBuffer, offset: 0, index: 0)
-
-
-                timer += 0.005
-                var currentTime = sin(timer * index)
-                renderEncoder.setFragmentBytes( &currentTime,
-                length: MemoryLayout<Float>.stride, index: 5)
 
                 renderEncoder.drawIndexedPrimitives(type: .triangle,
                                                     indexCount: 6,

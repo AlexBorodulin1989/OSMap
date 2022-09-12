@@ -13,9 +13,9 @@ protocol RenderEntity {
 
     static var vertexDescriptor: MTLVertexDescriptor { get }
 
-    var verts: [Float] { get }
-    var indices: [UInt16] { get }
-
     static var vertShader: String { get }
     static var fragShader: String { get }
+
+    func vertexBuffer(for device: MTLDevice) -> MTLBuffer
+    func indexBuffer(for device: MTLDevice) -> MTLBuffer
 }

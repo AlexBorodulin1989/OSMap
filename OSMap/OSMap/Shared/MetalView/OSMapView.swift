@@ -53,8 +53,7 @@ struct OSMapView: ViewRepresentable {
             super.init()
 
             renderer = RenderEngine(mtkView: parent.metalView)
-            renderer.addPrimitive(MapFrame(scale: 1.0))
-            renderer.addPrimitive(MapFrame(scale: 0.5))
+            renderer.addPrimitive(MapFrame(device: parent.metalView.device!, imageName: "0.png"))
         }
     }
 }
