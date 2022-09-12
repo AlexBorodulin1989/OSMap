@@ -11,9 +11,10 @@ class RenderGroup {
     private(set) var renderUnits = [RenderUnit]()
     let pipelineState: MTLRenderPipelineState
 
-    init(renderUnit: RenderUnit, mtkView: MTKView) {
+    init(renderUnit: RenderUnit, device: MTLDevice, pixelColorFormat: MTLPixelFormat) {
         renderUnits = [renderUnit]
-        pipelineState = renderUnit.pipelineState(mtkView: mtkView)
+        pipelineState = renderUnit.pipelineState(device: device,
+                                                 pixelColorFormat: pixelColorFormat)
     }
 
     func addRenderUnit(_ renderUnit: RenderUnit) {

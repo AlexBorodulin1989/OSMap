@@ -9,41 +9,33 @@ import MetalKit
 
 class RenderUnit {
 
-    var pipelineState: MTLRenderPipelineState!
-
     let vertBuffer: MTLBuffer
     let indexBuffer: MTLBuffer
 
     let primitiveType: Primitive.Type
 
-    init(primitive: Primitive, mtkView: MTKView) {
-        guard let vertexBuffer = mtkView.device?.makeBuffer(bytes: primitive.verts,
-                                                            length: MemoryLayout<Float>.stride * primitive.verts.count)
+    init(primitive: Primitive, device: MTLDevice) {
+        guard let vertexBuffer = device.makeBuffer(bytes: primitive.verts,
+                                                   length: MemoryLayout<Float>.stride * primitive.verts.count)
         else {
             fatalError("Fatal error: cannot create vertex buffer for Frame")
         }
 
         self.vertBuffer = vertexBuffer
 
-        guard let indexBuffer = mtkView.device?.makeBuffer(bytes: primitive.indices,
-                                                           length: MemoryLayout<UInt16>.stride * primitive.indices.count)
+        guard let indexBuffer = device.makeBuffer(bytes: primitive.indices,
+                                                  length: MemoryLayout<UInt16>.stride * primitive.indices.count)
         else {
             fatalError("Fatal error: cannot create index buffer for Frame")
         }
         self.indexBuffer = indexBuffer
 
         primitiveType = type(of: primitive)
-
-        pipelineState = pipelineState(mtkView: mtkView)
     }
 }
 
 extension RenderUnit {
-    func pipelineState(mtkView: MTKView) -> MTLRenderPipelineState {
-        guard let device = mtkView.device
-        else {
-            fatalError("Fatal error: device not found")
-        }
+    func pipelineState(device: MTLDevice, pixelColorFormat: MTLPixelFormat) -> MTLRenderPipelineState {
 
         guard let library = device.makeDefaultLibrary(),
               let vertFunc = library.makeFunction(name: primitiveType.vertShader),
@@ -55,13 +47,13 @@ extension RenderUnit {
         let pipelineDescriptor = MTLRenderPipelineDescriptor()
         pipelineDescriptor.vertexFunction = vertFunc
         pipelineDescriptor.fragmentFunction = fragFunc
-        pipelineDescriptor.colorAttachments[0].pixelFormat = mtkView.colorPixelFormat
+        pipelineDescriptor.colorAttachments[0].pixelFormat = pixelColorFormat
         pipelineDescriptor.vertexDescriptor = primitiveType.vertexDescriptor
 
         let pipelineState: MTLRenderPipelineState!
 
         do {
-            pipelineState = try mtkView.device?.makeRenderPipelineState(descriptor: pipelineDescriptor)
+            pipelineState = try device.makeRenderPipelineState(descriptor: pipelineDescriptor)
         } catch let error {
             fatalError(error.localizedDescription)
         }

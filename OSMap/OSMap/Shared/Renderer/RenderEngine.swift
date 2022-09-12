@@ -8,30 +8,30 @@
 import MetalKit
 
 class RenderEngine: NSObject {
-    private weak var mtkView: MTKView?
+    private var device: MTLDevice
     private var commandQueue: MTLCommandQueue!
 
     private var library: MTLLibrary!
     var pipelineState: MTLRenderPipelineState!
 
+    let pixelColorFormat: MTLPixelFormat
+
     private var renderGroups = [String: RenderGroup]()
 
     var timer: Float = 0
 
-    private override init() {
-        super.init()
-    }
-
     init(mtkView: MTKView) {
-        super.init()
-
-        self.mtkView = mtkView
-
         guard
             let device = MTLCreateSystemDefaultDevice()
         else {
             fatalError("Fatal error: cannot create Device")
         }
+
+        self.device = device
+
+        pixelColorFormat = mtkView.colorPixelFormat
+
+        super.init()
 
         guard
             let commandQueue = device.makeCommandQueue()
@@ -40,28 +40,28 @@ class RenderEngine: NSObject {
         }
         self.commandQueue = commandQueue
 
-        self.mtkView?.device = device
+        mtkView.device = device
 
-        self.mtkView?.clearColor = MTLClearColor(red: 1.0,
+        mtkView.clearColor = MTLClearColor(red: 1.0,
                                              green: 1.0,
                                              blue: 1.0,
                                              alpha: 1.0)
 
-        self.mtkView?.delegate = self
+        mtkView.delegate = self
     }
 }
 
 extension RenderEngine {
     func addPrimitive(_ primitive: Primitive) {
-        if let mtkView = mtkView {
-            let key = String(describing: type(of: primitive.self))
+        let key = String(describing: type(of: primitive.self))
 
-            let renderUnit = RenderUnit(primitive: primitive, mtkView: mtkView)
-            if let renderGroup = renderGroups[key] {
-                renderGroup.addRenderUnit(renderUnit)
-            } else {
-                renderGroups[key] = RenderGroup(renderUnit: renderUnit, mtkView: mtkView)
-            }
+        let renderUnit = RenderUnit(primitive: primitive, device: device)
+        if let renderGroup = renderGroups[key] {
+            renderGroup.addRenderUnit(renderUnit)
+        } else {
+            renderGroups[key] = RenderGroup(renderUnit: renderUnit,
+                                            device: device,
+                                            pixelColorFormat: pixelColorFormat)
         }
     }
 }
