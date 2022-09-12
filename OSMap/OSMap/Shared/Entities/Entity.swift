@@ -7,7 +7,7 @@
 
 import MetalKit
 
-protocol Primitive {
+protocol Entity {
     // grouping by unique vertex, fragment shader, data format and memory layout
     static var group: String { get }
 

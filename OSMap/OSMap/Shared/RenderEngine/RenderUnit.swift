@@ -12,9 +12,9 @@ class RenderUnit {
     let vertBuffer: MTLBuffer
     let indexBuffer: MTLBuffer
 
-    let primitiveType: Primitive.Type
+    let primitiveType: Entity.Type
 
-    init(primitive: Primitive, device: MTLDevice) {
+    init(primitive: Entity, device: MTLDevice) {
         guard let vertexBuffer = device.makeBuffer(bytes: primitive.verts,
                                                    length: MemoryLayout<Float>.stride * primitive.verts.count)
         else {

@@ -52,7 +52,7 @@ class RenderEngine: NSObject {
 }
 
 extension RenderEngine {
-    func addPrimitive(_ primitive: Primitive) {
+    func addPrimitive(_ primitive: Entity) {
         let key = String(describing: type(of: primitive.self))
 
         let renderUnit = RenderUnit(primitive: primitive, device: device)
