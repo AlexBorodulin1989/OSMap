@@ -129,7 +129,7 @@
 			children = (
 				9D3EEF6F28C48FBF00F03F48 /* Example */,
 				9DC6562928C39897009906BA /* MetalView */,
-				9DC6562528C39675009906BA /* Renderer */,
+				9DC6562528C39675009906BA /* RenderEngine */,
 				9DC6562128C395A0009906BA /* Shaders */,
 				9DC6561D28C3954F009906BA /* Primitives */,
 				9DC655E028C376A9009906BA /* Assets.xcassets */,
@@ -191,14 +191,14 @@
 			path = Shaders;
 			sourceTree = "<group>";
 		};
-		9DC6562528C39675009906BA /* Renderer */ = {
+		9DC6562528C39675009906BA /* RenderEngine */ = {
 			isa = PBXGroup;
 			children = (
 				9DC6562628C3969A009906BA /* RenderEngine.swift */,
 				9D3EEF7A28C4E3EE00F03F48 /* RenderUnit.swift */,
 				9D45254428C699A3005EE99D /* RenderGroup.swift */,
 			);
-			path = Renderer;
+			path = RenderEngine;
 			sourceTree = "<group>";
 		};
 		9DC6562928C39897009906BA /* MetalView */ = {
