@@ -7,34 +7,34 @@
 
 import MetalKit
 
-class RenderUnit {
+class RenderItem {
 
     let vertBuffer: MTLBuffer
     let indexBuffer: MTLBuffer
 
-    let primitiveType: Entity.Type
+    let primitiveType: RenderEntity.Type
 
-    init(primitive: Entity, device: MTLDevice) {
-        guard let vertexBuffer = device.makeBuffer(bytes: primitive.verts,
-                                                   length: MemoryLayout<Float>.stride * primitive.verts.count)
+    init(entity: RenderEntity, device: MTLDevice) {
+        guard let vertexBuffer = device.makeBuffer(bytes: entity.verts,
+                                                   length: MemoryLayout<Float>.stride * entity.verts.count)
         else {
             fatalError("Fatal error: cannot create vertex buffer for Frame")
         }
 
         self.vertBuffer = vertexBuffer
 
-        guard let indexBuffer = device.makeBuffer(bytes: primitive.indices,
-                                                  length: MemoryLayout<UInt16>.stride * primitive.indices.count)
+        guard let indexBuffer = device.makeBuffer(bytes: entity.indices,
+                                                  length: MemoryLayout<UInt16>.stride * entity.indices.count)
         else {
             fatalError("Fatal error: cannot create index buffer for Frame")
         }
         self.indexBuffer = indexBuffer
 
-        primitiveType = type(of: primitive)
+        primitiveType = type(of: entity)
     }
 }
 
-extension RenderUnit {
+extension RenderItem {
     func pipelineState(device: MTLDevice, pixelColorFormat: MTLPixelFormat) -> MTLRenderPipelineState {
 
         guard let library = device.makeDefaultLibrary(),

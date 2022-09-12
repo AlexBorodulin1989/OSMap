@@ -7,7 +7,7 @@
 
 import MetalKit
 
-struct MapFrame: Entity {
+struct MapFrame: RenderEntity {
 
     static let group: String = "MapFrame"
 

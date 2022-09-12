@@ -52,14 +52,14 @@ class RenderEngine: NSObject {
 }
 
 extension RenderEngine {
-    func addPrimitive(_ primitive: Entity) {
-        let key = String(describing: type(of: primitive.self))
+    func addPrimitive(_ entity: RenderEntity) {
+        let key = String(describing: type(of: entity.self))
 
-        let renderUnit = RenderUnit(primitive: primitive, device: device)
+        let renderUnit = RenderItem(entity: entity, device: device)
         if let renderGroup = renderGroups[key] {
             renderGroup.addRenderUnit(renderUnit)
         } else {
-            renderGroups[key] = RenderGroup(renderUnit: renderUnit,
+            renderGroups[key] = RenderGroup(renderItem: renderUnit,
                                             device: device,
                                             pixelColorFormat: pixelColorFormat)
         }

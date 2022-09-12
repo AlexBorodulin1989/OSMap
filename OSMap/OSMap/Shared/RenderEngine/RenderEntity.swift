@@ -7,7 +7,7 @@
 
 import MetalKit
 
-protocol Entity {
+protocol RenderEntity {
     // grouping by unique vertex, fragment shader, data format and memory layout
     static var group: String { get }
 

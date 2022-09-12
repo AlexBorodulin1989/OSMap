@@ -8,16 +8,16 @@
 import MetalKit
 
 class RenderGroup {
-    private(set) var renderUnits = [RenderUnit]()
+    private(set) var renderUnits = [RenderItem]()
     let pipelineState: MTLRenderPipelineState
 
-    init(renderUnit: RenderUnit, device: MTLDevice, pixelColorFormat: MTLPixelFormat) {
-        renderUnits = [renderUnit]
-        pipelineState = renderUnit.pipelineState(device: device,
+    init(renderItem: RenderItem, device: MTLDevice, pixelColorFormat: MTLPixelFormat) {
+        renderUnits = [renderItem]
+        pipelineState = renderItem.pipelineState(device: device,
                                                  pixelColorFormat: pixelColorFormat)
     }
 
-    func addRenderUnit(_ renderUnit: RenderUnit) {
-        renderUnits.append(renderUnit)
+    func addRenderUnit(_ renderItem: RenderItem) {
+        renderUnits.append(renderItem)
     }
 }

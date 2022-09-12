@@ -7,10 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		9D3EEF7828C4E2FB00F03F48 /* Entity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D3EEF7728C4E2FB00F03F48 /* Entity.swift */; };
-		9D3EEF7928C4E2FB00F03F48 /* Entity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D3EEF7728C4E2FB00F03F48 /* Entity.swift */; };
-		9D3EEF7B28C4E3EE00F03F48 /* RenderUnit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D3EEF7A28C4E3EE00F03F48 /* RenderUnit.swift */; };
-		9D3EEF7C28C4E3EE00F03F48 /* RenderUnit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D3EEF7A28C4E3EE00F03F48 /* RenderUnit.swift */; };
+		9D3EEF7828C4E2FB00F03F48 /* RenderEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D3EEF7728C4E2FB00F03F48 /* RenderEntity.swift */; };
+		9D3EEF7928C4E2FB00F03F48 /* RenderEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D3EEF7728C4E2FB00F03F48 /* RenderEntity.swift */; };
+		9D3EEF7B28C4E3EE00F03F48 /* RenderItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D3EEF7A28C4E3EE00F03F48 /* RenderItem.swift */; };
+		9D3EEF7C28C4E3EE00F03F48 /* RenderItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D3EEF7A28C4E3EE00F03F48 /* RenderItem.swift */; };
 		9D45254528C699A3005EE99D /* RenderGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D45254428C699A3005EE99D /* RenderGroup.swift */; };
 		9D45254628C699A3005EE99D /* RenderGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D45254428C699A3005EE99D /* RenderGroup.swift */; };
 		9D944BDA28CFB98C00D4925F /* 0.png in Resources */ = {isa = PBXBuildFile; fileRef = 9D944BD928CFB98C00D4925F /* 0.png */; };
@@ -53,8 +53,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		9D3EEF7728C4E2FB00F03F48 /* Entity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Entity.swift; sourceTree = "<group>"; };
-		9D3EEF7A28C4E3EE00F03F48 /* RenderUnit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenderUnit.swift; sourceTree = "<group>"; };
+		9D3EEF7728C4E2FB00F03F48 /* RenderEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenderEntity.swift; sourceTree = "<group>"; };
+		9D3EEF7A28C4E3EE00F03F48 /* RenderItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenderItem.swift; sourceTree = "<group>"; };
 		9D45254428C699A3005EE99D /* RenderGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenderGroup.swift; sourceTree = "<group>"; };
 		9D944BD928CFB98C00D4925F /* 0.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 0.png; sourceTree = "<group>"; };
 		9DC655DE28C376A9009906BA /* OSMapApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSMapApp.swift; sourceTree = "<group>"; };
@@ -189,7 +189,6 @@
 		9DC6561D28C3954F009906BA /* Entities */ = {
 			isa = PBXGroup;
 			children = (
-				9D3EEF7728C4E2FB00F03F48 /* Entity.swift */,
 				9DC6561E28C39567009906BA /* MapFrame.swift */,
 			);
 			path = Entities;
@@ -207,8 +206,9 @@
 			isa = PBXGroup;
 			children = (
 				9DC6562628C3969A009906BA /* RenderEngine.swift */,
-				9D3EEF7A28C4E3EE00F03F48 /* RenderUnit.swift */,
+				9D3EEF7A28C4E3EE00F03F48 /* RenderItem.swift */,
 				9D45254428C699A3005EE99D /* RenderGroup.swift */,
+				9D3EEF7728C4E2FB00F03F48 /* RenderEntity.swift */,
 			);
 			path = RenderEngine;
 			sourceTree = "<group>";
@@ -385,8 +385,8 @@
 				9D45254528C699A3005EE99D /* RenderGroup.swift in Sources */,
 				9DC6562328C395BF009906BA /* MapShader.metal in Sources */,
 				9DC6561F28C39567009906BA /* MapFrame.swift in Sources */,
-				9D3EEF7B28C4E3EE00F03F48 /* RenderUnit.swift in Sources */,
-				9D3EEF7828C4E2FB00F03F48 /* Entity.swift in Sources */,
+				9D3EEF7B28C4E3EE00F03F48 /* RenderItem.swift in Sources */,
+				9D3EEF7828C4E2FB00F03F48 /* RenderEntity.swift in Sources */,
 				9DC6560828C376AA009906BA /* ContentView.swift in Sources */,
 				9DC6562728C3969A009906BA /* RenderEngine.swift in Sources */,
 				9DC6560628C376AA009906BA /* OSMapApp.swift in Sources */,
@@ -401,8 +401,8 @@
 				9D45254628C699A3005EE99D /* RenderGroup.swift in Sources */,
 				9DC6562428C395BF009906BA /* MapShader.metal in Sources */,
 				9DC6562028C39567009906BA /* MapFrame.swift in Sources */,
-				9D3EEF7C28C4E3EE00F03F48 /* RenderUnit.swift in Sources */,
-				9D3EEF7928C4E2FB00F03F48 /* Entity.swift in Sources */,
+				9D3EEF7C28C4E3EE00F03F48 /* RenderItem.swift in Sources */,
+				9D3EEF7928C4E2FB00F03F48 /* RenderEntity.swift in Sources */,
 				9DC6560928C376AA009906BA /* ContentView.swift in Sources */,
 				9DC6562828C3969A009906BA /* RenderEngine.swift in Sources */,
 				9DC6560728C376AA009906BA /* OSMapApp.swift in Sources */,
