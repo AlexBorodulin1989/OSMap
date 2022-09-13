@@ -13,8 +13,8 @@ class RenderGroup {
 
     init(renderItem: RenderItem, device: MTLDevice, pixelColorFormat: MTLPixelFormat) {
         renderUnits = [renderItem]
-        pipelineState = renderItem.pipelineState(device: device,
-                                                 pixelColorFormat: pixelColorFormat)
+        pipelineState = type(of: renderItem.self).pipelineState(device: device,
+                                                                pixelColorFormat: pixelColorFormat)
     }
 
     func addRenderUnit(_ renderItem: RenderItem) {

@@ -14,21 +14,22 @@ extension MapFrame {
     }
 }
 
-struct MapFrame: RenderEntity {
-
-    static let group: String = "MapFrame"
-
+class MapFrame: RenderItem {
     var verts: [Point] = [
-        Point(pos: SIMD3<Float>(-1, 1, 0), texUV: SIMD2<Float>(0, 1)),
-        Point(pos: SIMD3<Float>(1, 1, 0), texUV: SIMD2<Float>(0, 0)),
-        Point(pos: SIMD3<Float>(-1, -1, 0), texUV: SIMD2<Float>(0, 0)),
-        Point(pos: SIMD3<Float>(1, -1, 0), texUV: SIMD2<Float>(0, 0))
+        Point(pos: SIMD3<Float>(-1, 1, 0), texUV: SIMD2<Float>(0, 0)),
+        Point(pos: SIMD3<Float>(1, 1, 0), texUV: SIMD2<Float>(1, 0)),
+        Point(pos: SIMD3<Float>(1, -1, 0), texUV: SIMD2<Float>(1, 1)),
+        Point(pos: SIMD3<Float>(-1, -1, 0), texUV: SIMD2<Float>(0, 1))
+
     ]
 
     var indices: [UInt16] = [
-        0, 3, 2,
-        0, 1, 3
+        0, 1, 2,
+        0, 2, 3
     ]
+
+    var vertBuffer: MTLBuffer!
+    var indexBuffer: MTLBuffer!
 
     var texture: Texture?
 
@@ -51,6 +52,9 @@ struct MapFrame: RenderEntity {
     }
 
     init(device: MTLDevice, imageName: String) {
+        self.vertBuffer = vertexBuffer(for: device)
+        self.indexBuffer = indexBuffer(for: device)
+
         self.texture = Texture(device: device, imageName: imageName)
     }
 
@@ -72,5 +76,16 @@ struct MapFrame: RenderEntity {
         }
 
         return indexBuffer
+    }
+
+    func draw(encoder: MTLRenderCommandEncoder) {
+        encoder.setFragmentTexture(texture?.mtlTexture, index: 0)
+
+        encoder.setVertexBuffer(vertBuffer, offset: 0, index: 0)
+        encoder.drawIndexedPrimitives(type: .triangle,
+                                            indexCount: 6,
+                                            indexType: .uint16,
+                                            indexBuffer: indexBuffer,
+                                            indexBufferOffset: 0)
     }
 }

@@ -50,14 +50,13 @@ class RenderEngine: NSObject {
 }
 
 extension RenderEngine {
-    func addPrimitive(_ entity: RenderEntity) {
-        let key = String(describing: type(of: entity.self))
-
-        let renderUnit = RenderItem(entity: entity, device: device)
+    func addPrimitive(_ item: RenderItem) {
+        let key = String(describing: type(of: item.self))
+        
         if let renderGroup = renderGroups[key] {
-            renderGroup.addRenderUnit(renderUnit)
+            renderGroup.addRenderUnit(item)
         } else {
-            renderGroups[key] = RenderGroup(renderItem: renderUnit,
+            renderGroups[key] = RenderGroup(renderItem: item,
                                             device: device,
                                             pixelColorFormat: pixelColorFormat)
         }
@@ -74,29 +73,20 @@ extension RenderEngine: MTKViewDelegate {
         guard
             let commandBuffer = commandQueue.makeCommandBuffer(),
             let descriptor = view.currentRenderPassDescriptor,
-            let renderEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: descriptor)
+            let encoder = commandBuffer.makeRenderCommandEncoder(descriptor: descriptor)
         else {
             return
         }
 
-        var index: Float = 0
-
         for (_, renderGroup) in renderGroups {
-            renderEncoder.setRenderPipelineState(renderGroup.pipelineState)
+            encoder.setRenderPipelineState(renderGroup.pipelineState)
 
-            renderGroup.renderUnits.forEach { renderUnit in
-                index += 1
-                renderEncoder.setVertexBuffer(renderUnit.vertBuffer, offset: 0, index: 0)
-
-                renderEncoder.drawIndexedPrimitives(type: .triangle,
-                                                    indexCount: 6,
-                                                    indexType: .uint16,
-                                                    indexBuffer: renderUnit.indexBuffer,
-                                                    indexBufferOffset: 0)
+            renderGroup.renderUnits.forEach { renderItem in
+                renderItem.draw(encoder: encoder)
             }
         }
 
-        renderEncoder.endEncoding()
+        encoder.endEncoding()
         guard let drawable = view.currentDrawable else {
             return
         }

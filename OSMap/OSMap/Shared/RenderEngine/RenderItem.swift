@@ -7,29 +7,25 @@
 
 import MetalKit
 
-class RenderItem {
+protocol RenderItem {
 
-    let vertBuffer: MTLBuffer
-    let indexBuffer: MTLBuffer
+    static var vertexDescriptor: MTLVertexDescriptor { get }
 
-    let primitiveType: RenderEntity.Type
+    static var vertShader: String { get }
+    static var fragShader: String { get }
 
-    init(entity: RenderEntity, device: MTLDevice) {
-        
+    func vertexBuffer(for device: MTLDevice) -> MTLBuffer
+    func indexBuffer(for device: MTLDevice) -> MTLBuffer
 
-        self.vertBuffer = entity.vertexBuffer(for: device)
-        self.indexBuffer = entity.indexBuffer(for: device)
-
-        primitiveType = type(of: entity) // rename to entityType
-    }
+    func draw(encoder: MTLRenderCommandEncoder)
 }
 
 extension RenderItem {
-    func pipelineState(device: MTLDevice, pixelColorFormat: MTLPixelFormat) -> MTLRenderPipelineState {
+    static func pipelineState(device: MTLDevice, pixelColorFormat: MTLPixelFormat) -> MTLRenderPipelineState {
 
         guard let library = device.makeDefaultLibrary(),
-              let vertFunc = library.makeFunction(name: primitiveType.vertShader),
-              let fragFunc = library.makeFunction(name: primitiveType.fragShader)
+              let vertFunc = library.makeFunction(name: vertShader),
+              let fragFunc = library.makeFunction(name: fragShader)
         else {
             fatalError("Fatal error: cannot make shader")
         }
@@ -38,7 +34,7 @@ extension RenderItem {
         pipelineDescriptor.vertexFunction = vertFunc
         pipelineDescriptor.fragmentFunction = fragFunc
         pipelineDescriptor.colorAttachments[0].pixelFormat = pixelColorFormat
-        pipelineDescriptor.vertexDescriptor = primitiveType.vertexDescriptor
+        pipelineDescriptor.vertexDescriptor = vertexDescriptor
 
         let pipelineState: MTLRenderPipelineState!
 
@@ -51,3 +47,4 @@ extension RenderItem {
         return pipelineState
     }
 }
+

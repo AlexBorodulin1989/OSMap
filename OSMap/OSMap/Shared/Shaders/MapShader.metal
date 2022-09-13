@@ -18,17 +18,19 @@ struct MapFragment {
     float2 texUV;
 };
 
-vertex float4 map_vertex(MapVertex vert [[stage_in]],
+vertex MapFragment map_vertex(MapVertex vert [[stage_in]],
                          uint vertexID [[vertex_id]])
 {
     MapFragment frag;
     frag.pos = vert.pos;
     frag.texUV = vert.texUV;
 
-    return vert.pos;
+    return frag;
 }
 
-fragment half4 map_fragment(MapFragment frag [[stage_in]]) {
+fragment half4 map_fragment(MapFragment frag [[stage_in]],
+                            texture2d<float> texture [[ texture(0) ]]) {
     constexpr sampler s = sampler(coord::normalized, address::clamp_to_zero, filter::linear);
-    return half4(0, 1, 1, 1);
+    float4 color = texture.sample(s, frag.texUV);
+    return half4(color.r, color.g, color.b, 1);
 }
