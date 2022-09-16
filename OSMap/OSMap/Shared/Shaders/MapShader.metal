@@ -8,6 +8,10 @@
 #include <metal_stdlib>
 using namespace metal;
 
+struct Camera {
+    float4x4 projection;
+};
+
 struct MapVertex {
     float4 pos [[attribute(0)]];
     float2 texUV [[ attribute(1) ]];
@@ -19,10 +23,10 @@ struct MapFragment {
 };
 
 vertex MapFragment map_vertex(MapVertex vert [[stage_in]],
-                         uint vertexID [[vertex_id]])
+                              constant Camera &camera [[ buffer(1) ]])
 {
     MapFragment frag;
-    frag.pos = vert.pos;
+    frag.pos = camera.projection * vert.pos;
     frag.texUV = vert.texUV;
 
     return frag;

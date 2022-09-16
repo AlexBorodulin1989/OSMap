@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		9D3EEF7828C4E2FB00F03F48 /* RenderEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D3EEF7728C4E2FB00F03F48 /* RenderEntity.swift */; };
-		9D3EEF7928C4E2FB00F03F48 /* RenderEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D3EEF7728C4E2FB00F03F48 /* RenderEntity.swift */; };
+		9D29B6BA28D521620049FA3A /* Camera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D29B6B928D521620049FA3A /* Camera.swift */; };
+		9D29B6BB28D521620049FA3A /* Camera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D29B6B928D521620049FA3A /* Camera.swift */; };
 		9D3EEF7B28C4E3EE00F03F48 /* RenderItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D3EEF7A28C4E3EE00F03F48 /* RenderItem.swift */; };
 		9D3EEF7C28C4E3EE00F03F48 /* RenderItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D3EEF7A28C4E3EE00F03F48 /* RenderItem.swift */; };
 		9D45254528C699A3005EE99D /* RenderGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D45254428C699A3005EE99D /* RenderGroup.swift */; };
@@ -55,7 +55,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		9D3EEF7728C4E2FB00F03F48 /* RenderEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenderEntity.swift; sourceTree = "<group>"; };
+		9D29B6B928D521620049FA3A /* Camera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Camera.swift; sourceTree = "<group>"; };
 		9D3EEF7A28C4E3EE00F03F48 /* RenderItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenderItem.swift; sourceTree = "<group>"; };
 		9D45254428C699A3005EE99D /* RenderGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenderGroup.swift; sourceTree = "<group>"; };
 		9D944BD928CFB98C00D4925F /* 0.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 0.png; sourceTree = "<group>"; };
@@ -211,8 +211,8 @@
 				9DC6562628C3969A009906BA /* RenderEngine.swift */,
 				9D3EEF7A28C4E3EE00F03F48 /* RenderItem.swift */,
 				9D45254428C699A3005EE99D /* RenderGroup.swift */,
-				9D3EEF7728C4E2FB00F03F48 /* RenderEntity.swift */,
 				9D944BDD28CFBCFF00D4925F /* Texture.swift */,
+				9D29B6B928D521620049FA3A /* Camera.swift */,
 			);
 			path = RenderEngine;
 			sourceTree = "<group>";
@@ -391,7 +391,7 @@
 				9DC6562328C395BF009906BA /* MapShader.metal in Sources */,
 				9DC6561F28C39567009906BA /* MapFrame.swift in Sources */,
 				9D3EEF7B28C4E3EE00F03F48 /* RenderItem.swift in Sources */,
-				9D3EEF7828C4E2FB00F03F48 /* RenderEntity.swift in Sources */,
+				9D29B6BA28D521620049FA3A /* Camera.swift in Sources */,
 				9DC6560828C376AA009906BA /* ContentView.swift in Sources */,
 				9DC6562728C3969A009906BA /* RenderEngine.swift in Sources */,
 				9DC6560628C376AA009906BA /* OSMapApp.swift in Sources */,
@@ -408,7 +408,7 @@
 				9DC6562428C395BF009906BA /* MapShader.metal in Sources */,
 				9DC6562028C39567009906BA /* MapFrame.swift in Sources */,
 				9D3EEF7C28C4E3EE00F03F48 /* RenderItem.swift in Sources */,
-				9D3EEF7928C4E2FB00F03F48 /* RenderEntity.swift in Sources */,
+				9D29B6BB28D521620049FA3A /* Camera.swift in Sources */,
 				9DC6560928C376AA009906BA /* ContentView.swift in Sources */,
 				9DC6562828C3969A009906BA /* RenderEngine.swift in Sources */,
 				9DC6560728C376AA009906BA /* OSMapApp.swift in Sources */,

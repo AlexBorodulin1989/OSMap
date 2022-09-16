@@ -12,11 +12,12 @@ class RenderEngine: NSObject {
     private var commandQueue: MTLCommandQueue!
 
     private var library: MTLLibrary!
-    var pipelineState: MTLRenderPipelineState!
 
     let pixelColorFormat: MTLPixelFormat
 
     private var renderGroups = [String: RenderGroup]()
+
+    private(set) var aspectRatio: Float = 1
 
     init(mtkView: MTKView) {
         guard
@@ -67,6 +68,8 @@ extension RenderEngine: MTKViewDelegate {
     func mtkView(_ view: MTKView,
                  drawableSizeWillChange size: CGSize
     ) {
+        let width = size.width > 1 ? size.width : 1
+        aspectRatio = Float(size.height / width)
     }
 
     func draw(in view: MTKView) {
@@ -82,7 +85,7 @@ extension RenderEngine: MTKViewDelegate {
             encoder.setRenderPipelineState(renderGroup.pipelineState)
 
             renderGroup.renderUnits.forEach { renderItem in
-                renderItem.draw(encoder: encoder)
+                renderItem.draw(engine: self, encoder: encoder)
             }
         }
 

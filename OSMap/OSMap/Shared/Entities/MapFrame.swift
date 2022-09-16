@@ -16,10 +16,10 @@ extension MapFrame {
 
 class MapFrame: RenderItem {
     var verts: [Point] = [
-        Point(pos: SIMD3<Float>(-1, 1, 0), texUV: SIMD2<Float>(0, 0)),
-        Point(pos: SIMD3<Float>(1, 1, 0), texUV: SIMD2<Float>(1, 0)),
-        Point(pos: SIMD3<Float>(1, -1, 0), texUV: SIMD2<Float>(1, 1)),
-        Point(pos: SIMD3<Float>(-1, -1, 0), texUV: SIMD2<Float>(0, 1))
+        Point(pos: SIMD3<Float>(-1, 1, 1), texUV: SIMD2<Float>(0, 0)),
+        Point(pos: SIMD3<Float>(1, 1, 1), texUV: SIMD2<Float>(1, 0)),
+        Point(pos: SIMD3<Float>(1, -1, 1), texUV: SIMD2<Float>(1, 1)),
+        Point(pos: SIMD3<Float>(-1, -1, 1), texUV: SIMD2<Float>(0, 1))
 
     ]
 
@@ -78,8 +78,29 @@ class MapFrame: RenderItem {
         return indexBuffer
     }
 
-    func draw(encoder: MTLRenderCommandEncoder) {
+    func draw(engine: RenderEngine, encoder: MTLRenderCommandEncoder) {
         encoder.setFragmentTexture(texture?.mtlTexture, index: 0)
+
+        let far: Float = 2
+        let near: Float = 0.1
+
+        let interval = far - near
+
+        let a = far / interval
+        let b = -far * near / interval
+
+        let projMatrix = matrix_float4x4([
+            SIMD4<Float>(engine.aspectRatio, 0, 0, 0),
+            SIMD4<Float>(                 0, 1, 0, 0),
+            SIMD4<Float>(                 0, 0, a, 1),
+            SIMD4<Float>(                 0, 0, b, 0)
+        ])
+
+        var cam = Camera(projection: projMatrix)
+
+        encoder.setVertexBytes(&cam,
+                               length: MemoryLayout<Camera>.stride,
+                               index: 1)
 
         encoder.setVertexBuffer(vertBuffer, offset: 0, index: 0)
         encoder.drawIndexedPrimitives(type: .triangle,

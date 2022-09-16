@@ -17,7 +17,7 @@ protocol RenderItem {
     func vertexBuffer(for device: MTLDevice) -> MTLBuffer
     func indexBuffer(for device: MTLDevice) -> MTLBuffer
 
-    func draw(encoder: MTLRenderCommandEncoder)
+    func draw(engine: RenderEngine, encoder: MTLRenderCommandEncoder)
 }
 
 extension RenderItem {
