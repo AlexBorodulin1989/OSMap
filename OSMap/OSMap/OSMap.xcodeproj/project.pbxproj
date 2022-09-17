@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		9D29B6BA28D521620049FA3A /* Camera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D29B6B928D521620049FA3A /* Camera.swift */; };
 		9D29B6BB28D521620049FA3A /* Camera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D29B6B928D521620049FA3A /* Camera.swift */; };
+		9D380D2B28D63FDC00E79030 /* TileFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D380D2A28D63FDC00E79030 /* TileFrame.swift */; };
+		9D380D2C28D63FDC00E79030 /* TileFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D380D2A28D63FDC00E79030 /* TileFrame.swift */; };
 		9D3EEF7B28C4E3EE00F03F48 /* RenderItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D3EEF7A28C4E3EE00F03F48 /* RenderItem.swift */; };
 		9D3EEF7C28C4E3EE00F03F48 /* RenderItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D3EEF7A28C4E3EE00F03F48 /* RenderItem.swift */; };
 		9D45254528C699A3005EE99D /* RenderGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D45254428C699A3005EE99D /* RenderGroup.swift */; };
@@ -56,6 +58,7 @@
 
 /* Begin PBXFileReference section */
 		9D29B6B928D521620049FA3A /* Camera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Camera.swift; sourceTree = "<group>"; };
+		9D380D2A28D63FDC00E79030 /* TileFrame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TileFrame.swift; sourceTree = "<group>"; };
 		9D3EEF7A28C4E3EE00F03F48 /* RenderItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenderItem.swift; sourceTree = "<group>"; };
 		9D45254428C699A3005EE99D /* RenderGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenderGroup.swift; sourceTree = "<group>"; };
 		9D944BD928CFB98C00D4925F /* 0.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 0.png; sourceTree = "<group>"; };
@@ -193,6 +196,7 @@
 			isa = PBXGroup;
 			children = (
 				9DC6561E28C39567009906BA /* MapFrame.swift */,
+				9D380D2A28D63FDC00E79030 /* TileFrame.swift */,
 			);
 			path = Entities;
 			sourceTree = "<group>";
@@ -388,6 +392,7 @@
 				9DC6562B28C398A3009906BA /* OSMapView.swift in Sources */,
 				9D944BDE28CFBCFF00D4925F /* Texture.swift in Sources */,
 				9D45254528C699A3005EE99D /* RenderGroup.swift in Sources */,
+				9D380D2B28D63FDC00E79030 /* TileFrame.swift in Sources */,
 				9DC6562328C395BF009906BA /* MapShader.metal in Sources */,
 				9DC6561F28C39567009906BA /* MapFrame.swift in Sources */,
 				9D3EEF7B28C4E3EE00F03F48 /* RenderItem.swift in Sources */,
@@ -405,6 +410,7 @@
 				9DC6562C28C398A3009906BA /* OSMapView.swift in Sources */,
 				9D944BDF28CFBCFF00D4925F /* Texture.swift in Sources */,
 				9D45254628C699A3005EE99D /* RenderGroup.swift in Sources */,
+				9D380D2C28D63FDC00E79030 /* TileFrame.swift in Sources */,
 				9DC6562428C395BF009906BA /* MapShader.metal in Sources */,
 				9DC6562028C39567009906BA /* MapFrame.swift in Sources */,
 				9D3EEF7C28C4E3EE00F03F48 /* RenderItem.swift in Sources */,

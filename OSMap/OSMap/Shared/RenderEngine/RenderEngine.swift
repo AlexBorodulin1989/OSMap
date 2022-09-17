@@ -82,8 +82,6 @@ extension RenderEngine: MTKViewDelegate {
         }
 
         for (_, renderGroup) in renderGroups {
-            encoder.setRenderPipelineState(renderGroup.pipelineState)
-
             renderGroup.renderUnits.forEach { renderItem in
                 renderItem.draw(engine: self, encoder: encoder)
             }

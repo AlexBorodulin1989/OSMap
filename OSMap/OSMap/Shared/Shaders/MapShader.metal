@@ -13,7 +13,7 @@ struct Camera {
 };
 
 struct MapVertex {
-    float4 pos [[attribute(0)]];
+    float4 pos [[ attribute(0) ]];
     float2 texUV [[ attribute(1) ]];
 };
 
@@ -33,8 +33,8 @@ vertex MapFragment map_vertex(MapVertex vert [[stage_in]],
 }
 
 fragment half4 map_fragment(MapFragment frag [[stage_in]],
-                            texture2d<float> texture [[ texture(0) ]]) {
-    constexpr sampler s = sampler(coord::normalized, address::clamp_to_zero, filter::linear);
-    float4 color = texture.sample(s, frag.texUV);
+                            texture2d<half> texture [[ texture(0) ]]) {
+    constexpr sampler s = sampler(coord::normalized, address::repeat, filter::nearest);
+    half4 color = texture.sample(s, frag.texUV);
     return half4(color.r, color.g, color.b, 1);
 }
