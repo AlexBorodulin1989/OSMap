@@ -117,12 +117,24 @@ class TileFrame: RenderItem {
         let a = far / interval
         let b = -far * near / interval
 
-        let projMatrix = matrix_float4x4([
-            SIMD4<Float>(engine.aspectRatio, 0, 0, 0),
-            SIMD4<Float>(                 0, 1, 0, 0),
-            SIMD4<Float>(                 0, 0, a, 1),
-            SIMD4<Float>(                 0, 0, b, 0)
-        ])
+        let projMatrix: matrix_float4x4
+
+        if engine.aspectRatio < 1 {
+            projMatrix = matrix_float4x4([
+                SIMD4<Float>(1, 0, 0, 0),
+                SIMD4<Float>(0, 1/engine.aspectRatio, 0, 0),
+                SIMD4<Float>(                 0, 0, a, 1),
+                SIMD4<Float>(                 0, 0, b, 0)
+            ])
+        } else {
+            projMatrix = matrix_float4x4([
+                SIMD4<Float>(engine.aspectRatio, 0, 0, 0),
+                SIMD4<Float>(                 0, 1, 0, 0),
+                SIMD4<Float>(                 0, 0, a, 1),
+                SIMD4<Float>(                 0, 0, b, 0)
+            ])
+        }
+
 
         var cam = Camera(projection: projMatrix)
 
