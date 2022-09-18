@@ -17,13 +17,7 @@ extension TileFrame {
 class TileFrame: RenderItem {
     let visibleTilesCountByDimension = 2
 
-    var verts: [Point] = [
-        Point(pos: SIMD3<Float>(-1, 1, 1), texUV: SIMD2<Float>(0, 0)),
-        Point(pos: SIMD3<Float>(1, 1, 1), texUV: SIMD2<Float>(1, 0)),
-        Point(pos: SIMD3<Float>(1, -1, 1), texUV: SIMD2<Float>(1, 1)),
-        Point(pos: SIMD3<Float>(-1, -1, 1), texUV: SIMD2<Float>(0, 1))
-
-    ]
+    var verts: [Point] = []
 
     var indices: [UInt16] = [
         0, 1, 2,
@@ -54,10 +48,13 @@ class TileFrame: RenderItem {
     }
 
     init(device: MTLDevice, imageName: String) {
+        self.texture = Texture(device: device, imageName: imageName)
+    }
+
+    func setVertices(verts: [Point], device: MTLDevice) {
+        self.verts = verts
         self.vertBuffer = vertexBuffer(for: device)
         self.indexBuffer = indexBuffer(for: device)
-
-        self.texture = Texture(device: device, imageName: imageName)
     }
 
     func vertexBuffer(for device: MTLDevice) -> MTLBuffer {
