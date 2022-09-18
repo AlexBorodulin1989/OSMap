@@ -34,7 +34,7 @@ vertex MapFragment map_vertex(MapVertex vert [[stage_in]],
 
 fragment half4 map_fragment(MapFragment frag [[stage_in]],
                             texture2d<half> texture [[ texture(0) ]]) {
-    constexpr sampler s = sampler(coord::normalized, address::repeat, filter::nearest);
+    constexpr sampler s = sampler(coord::normalized, address::mirrored_repeat, filter::nearest);
     half4 color = texture.sample(s, frag.texUV);
     return half4(color.r, color.g, color.b, 1);
 }
