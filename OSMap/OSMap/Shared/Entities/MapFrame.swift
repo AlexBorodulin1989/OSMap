@@ -15,7 +15,7 @@ class MapFrame {
 
     let pipelineState: MTLRenderPipelineState
 
-    init(device: MTLDevice, imageName: String) {
+    init(device: MTLDevice) {
         pipelineState = TileFrame.pipelineState(device: device, pixelColorFormat: .bgra8Unorm)
 
         let dimSize: Float = 2 / Float(visibleTilesByDimCount)

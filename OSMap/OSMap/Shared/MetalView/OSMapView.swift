@@ -17,6 +17,7 @@ typealias UniversalView = UIView
 #endif
 
 struct OSMapView: ViewRepresentable {
+    @StateObject private var viewModel = OSMapViewModel()
     @State private var metalView = MTKView()
 
 #if os(macOS)
@@ -53,7 +54,7 @@ struct OSMapView: ViewRepresentable {
             super.init()
 
             renderer = RenderEngine(mtkView: parent.metalView)
-            renderer.addPrimitive(MapFrame(device: parent.metalView.device!, imageName: "0.png"))
+            renderer.addPrimitive(MapFrame(device: parent.metalView.device!))
         }
     }
 }

@@ -43,6 +43,8 @@
 		9DC6D7C628D773D000C03283 /* 1-0-1.png in Resources */ = {isa = PBXBuildFile; fileRef = 9DC6D7C428D773D000C03283 /* 1-0-1.png */; };
 		9DC6D7C828D773FB00C03283 /* 1-1-1.png in Resources */ = {isa = PBXBuildFile; fileRef = 9DC6D7C728D773FB00C03283 /* 1-1-1.png */; };
 		9DC6D7C928D773FB00C03283 /* 1-1-1.png in Resources */ = {isa = PBXBuildFile; fileRef = 9DC6D7C728D773FB00C03283 /* 1-1-1.png */; };
+		9DCCF51628DBA266009B20A0 /* OSMapViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DCCF51528DBA266009B20A0 /* OSMapViewModel.swift */; };
+		9DCCF51728DBA266009B20A0 /* OSMapViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DCCF51528DBA266009B20A0 /* OSMapViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -88,6 +90,7 @@
 		9DC6D7C128D7739400C03283 /* 1-1-0.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "1-1-0.png"; sourceTree = "<group>"; };
 		9DC6D7C428D773D000C03283 /* 1-0-1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "1-0-1.png"; sourceTree = "<group>"; };
 		9DC6D7C728D773FB00C03283 /* 1-1-1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "1-1-1.png"; sourceTree = "<group>"; };
+		9DCCF51528DBA266009B20A0 /* OSMapViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSMapViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -237,6 +240,7 @@
 			isa = PBXGroup;
 			children = (
 				9DC6562A28C398A3009906BA /* OSMapView.swift */,
+				9DCCF51528DBA266009B20A0 /* OSMapViewModel.swift */,
 			);
 			path = MetalView;
 			sourceTree = "<group>";
@@ -414,6 +418,7 @@
 				9DC6562328C395BF009906BA /* MapShader.metal in Sources */,
 				9DC6561F28C39567009906BA /* MapFrame.swift in Sources */,
 				9D3EEF7B28C4E3EE00F03F48 /* RenderItem.swift in Sources */,
+				9DCCF51628DBA266009B20A0 /* OSMapViewModel.swift in Sources */,
 				9D29B6BA28D521620049FA3A /* Camera.swift in Sources */,
 				9DC6560828C376AA009906BA /* ContentView.swift in Sources */,
 				9DC6562728C3969A009906BA /* RenderEngine.swift in Sources */,
@@ -432,6 +437,7 @@
 				9DC6562428C395BF009906BA /* MapShader.metal in Sources */,
 				9DC6562028C39567009906BA /* MapFrame.swift in Sources */,
 				9D3EEF7C28C4E3EE00F03F48 /* RenderItem.swift in Sources */,
+				9DCCF51728DBA266009B20A0 /* OSMapViewModel.swift in Sources */,
 				9D29B6BB28D521620049FA3A /* Camera.swift in Sources */,
 				9DC6560928C376AA009906BA /* ContentView.swift in Sources */,
 				9DC6562828C3969A009906BA /* RenderEngine.swift in Sources */,
