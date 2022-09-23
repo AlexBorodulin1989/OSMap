@@ -7,15 +7,14 @@
 
 import MetalKit
 
-class MapFrame {
-
+class MapFrame: RenderItem {
     var visibleTilesByDimCount = 2
     
     var tiles = [[TileFrame]]()
 
     let pipelineState: MTLRenderPipelineState
 
-    init(device: MTLDevice) {
+    required init(device: MTLDevice, params: Any...) {
         pipelineState = TileFrame.pipelineState(device: device, pixelColorFormat: .bgra8Unorm)
 
         let dimSize: Float = 2 / Float(visibleTilesByDimCount)
@@ -23,7 +22,7 @@ class MapFrame {
         for row in 0..<visibleTilesByDimCount {
             var columnTiles = [TileFrame]()
             for column in 0..<visibleTilesByDimCount {
-                let tile = TileFrame(device: device, imageName: "1-\(row)-\(visibleTilesByDimCount - column - 1).png")
+                let tile = TileFrame(device: device, params: "1-\(row)-\(visibleTilesByDimCount - column - 1).png")
 
                 let leftPointX = (Float(row) * dimSize) - 1
                 let rightPointX = (Float(row) * dimSize + dimSize) - 1
@@ -50,7 +49,7 @@ class MapFrame {
     }
 }
 
-extension MapFrame: RenderItem {
+extension MapFrame {
     func draw(engine: RenderEngine, encoder: MTLRenderCommandEncoder) {
         encoder.setRenderPipelineState(pipelineState)
         tiles.flatMap{$0}.forEach { $0.draw(engine: engine, encoder: encoder) }

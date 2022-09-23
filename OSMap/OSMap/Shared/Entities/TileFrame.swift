@@ -47,8 +47,10 @@ class TileFrame: RenderItem {
         return vertDescriptor
     }
 
-    init(device: MTLDevice, imageName: String) {
-        self.texture = Texture(device: device, imageName: imageName)
+    required init(device: MTLDevice, params: Any...) {
+        if let imageName = params.first as? String {
+            self.texture = Texture(device: device, imageName: imageName)
+        }
     }
 
     func setVertices(verts: [Point], device: MTLDevice) {

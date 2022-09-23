@@ -8,6 +8,8 @@
 import MetalKit
 
 protocol RenderItem {
+    init(device: MTLDevice, params: Any...)
+
     func draw(engine: RenderEngine, encoder: MTLRenderCommandEncoder)
 }
 

@@ -51,8 +51,10 @@ class RenderEngine: NSObject {
 }
 
 extension RenderEngine {
-    func addPrimitive(_ item: RenderItem) {
-        let key = String(describing: type(of: item.self))
+    func addPrimitive(type: RenderItem.Type, params: Any...) {
+        let key = String(describing: type)
+
+        let item = type.init(device: device, params: params)
         
         if let renderGroup = renderGroups[key] {
             renderGroup.addRenderUnit(item)
