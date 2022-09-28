@@ -6,6 +6,8 @@
 //
 
 import MetalKit
+import Cocoa
+import Combine
 
 extension TileFrame {
     struct Point {
@@ -34,6 +36,8 @@ class TileFrame: RenderItem {
 
     var zoom: Float = 0.0
 
+    private var cancellables = Set<AnyCancellable>()
+
     static var vertexDescriptor: MTLVertexDescriptor {
         let vertDescriptor = MTLVertexDescriptor()
         vertDescriptor.attributes[0].format = .float3
@@ -50,9 +54,49 @@ class TileFrame: RenderItem {
     }
 
     required init(device: MTLDevice, params: Any...) {
-        if let imageName = params.first as? String {
-            self.texture = Texture(device: device, imageName: imageName)
+        if let params = params.first as? [Int] {
+            self.texture = Texture(device: device, imageName: "no_img.png")
+
+            let request = URLRequest(url: URL(string: "https://tile.openstreetmap.org/\(params[0])/\(params[1])/\(params[2]).png")!)
+            let publisher: URLSession.RequestTilePublisher = URLSession.RequestTilePublisher(urlRequest: request)
+            publisher
+                .sink { error in
+
+                } receiveValue: { data in
+                    DispatchQueue.main.async {[weak self] in
+                        guard let self = self
+                        else {
+                            return
+                        }
+                        let image = NSImage(data: data)!
+                        let data = jpegDataFrom(image:image)
+
+                        if let image = NSImage(data: data) {
+                            var imageRect = CGRect(x: 0, y: 0, width: image.size.width, height: image.size.height)
+                            if let imageRef = image.cgImage(forProposedRect: &imageRect, context: nil, hints: nil) {
+                                do {
+                                    let mtlTexture = try MTKTextureLoader(device: device).newTexture(cgImage: imageRef, options: nil)
+                                    self.texture = Texture(mtlTexture: mtlTexture)
+                                } catch {
+                                    print(error.localizedDescription)
+                                }
+                            }
+
+                        }
+                    }
+                }.store(in: &cancellables)
+
+            //let subscriber = RequestTileSubscriber()
+            //publisher.subscribe(subscriber)
+            //let stampTexture = try! MTKTextureLoader(device: self.device!).newTexture(cgImage: strokeUIImage.cgImage!, options: nil)
         }
+
+        func jpegDataFrom(image:NSImage) -> Data {
+                let cgImage = image.cgImage(forProposedRect: nil, context: nil, hints: nil)!
+                let bitmapRep = NSBitmapImageRep(cgImage: cgImage)
+                let jpegData = bitmapRep.representation(using: NSBitmapImageRep.FileType.jpeg, properties: [:])!
+                return jpegData
+            }
     }
 
     func setVertices(verts: [Point], device: MTLDevice) {

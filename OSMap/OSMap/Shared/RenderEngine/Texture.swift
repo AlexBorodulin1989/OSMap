@@ -25,4 +25,8 @@ class Texture {
 
         self.mtlTexture = tex
     }
+
+    init(mtlTexture: MTLTexture) {
+        self.mtlTexture = mtlTexture
+    }
 }

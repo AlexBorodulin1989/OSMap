@@ -34,7 +34,7 @@ class MapFrame: RenderItem {
         for row in 0..<visibleTilesByDimCount {
             var columnTiles = [TileFrame]()
             for column in 0..<visibleTilesByDimCount {
-                let tile = TileFrame(device: device, params: "1-\(row)-\(visibleTilesByDimCount - column - 1).png")
+                let tile = TileFrame(device: device, params: [1, row, visibleTilesByDimCount - column - 1]/*"1-\(row)-\(visibleTilesByDimCount - column - 1).png"*/)
 
                 let leftPointX = (Float(row) * dimSize) - 1
                 let rightPointX = (Float(row) * dimSize + dimSize) - 1
