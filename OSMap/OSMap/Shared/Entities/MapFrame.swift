@@ -6,13 +6,25 @@
 //
 
 import MetalKit
+import Combine
 
 class MapFrame: RenderItem {
-    var visibleTilesByDimCount = 2
+    private var visibleTilesByDimCount = 2
     
-    var tiles = [[TileFrame]]()
+    private var tiles = [[TileFrame]]()
 
-    let pipelineState: MTLRenderPipelineState
+    private let pipelineState: MTLRenderPipelineState
+
+    var cancellables = Set<AnyCancellable>()
+
+    private var zoom: Float = 0
+
+    var mouseWeelEvent: NSEvent? {
+        didSet {
+            zoom += Float(mouseWeelEvent?.scrollingDeltaY ?? 0) * 0.01
+            print(zoom)
+        }
+    }
 
     required init(device: MTLDevice, params: Any...) {
         pipelineState = TileFrame.pipelineState(device: device, pixelColorFormat: .bgra8Unorm)
@@ -46,12 +58,27 @@ class MapFrame: RenderItem {
 
             tiles.append(columnTiles)
         }
+
+        setScrollWeelListener()
+    }
+}
+
+extension MapFrame {
+    func setScrollWeelListener() {
+        NSApp.publisher(for: \.currentEvent)
+            .filter { event in event?.type == .scrollWheel }
+            .throttle(for: .milliseconds(1), scheduler: DispatchQueue.main, latest: true)
+            .assign(to: \.mouseWeelEvent, on: self)
+            .store(in: &cancellables)
     }
 }
 
 extension MapFrame {
     func draw(engine: RenderEngine, encoder: MTLRenderCommandEncoder) {
         encoder.setRenderPipelineState(pipelineState)
-        tiles.flatMap{$0}.forEach { $0.draw(engine: engine, encoder: encoder) }
+        tiles.flatMap{$0}.forEach {[weak self] tile in
+            tile.zoom = self?.zoom ?? 0
+            tile.draw(engine: engine, encoder: encoder)
+        }
     }
 }

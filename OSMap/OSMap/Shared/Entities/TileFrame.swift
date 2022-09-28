@@ -32,6 +32,8 @@ class TileFrame: RenderItem {
     static var vertShader: String { "map_vertex" }
     static var fragShader: String { "map_fragment" }
 
+    var zoom: Float = 0.0
+
     static var vertexDescriptor: MTLVertexDescriptor {
         let vertDescriptor = MTLVertexDescriptor()
         vertDescriptor.attributes[0].format = .float3
@@ -134,8 +136,15 @@ class TileFrame: RenderItem {
             ])
         }
 
+        let viewMatrix = matrix_float4x4([
+            SIMD4<Float>(1, 0, 0, 0),
+            SIMD4<Float>(0, 1, 0, 0),
+            SIMD4<Float>(0, 0, 1, 0),
+            SIMD4<Float>(0, 0, -zoom, 1)
+        ])
 
-        var cam = Camera(projection: projMatrix)
+
+        var cam = Camera(projection: projMatrix, view: viewMatrix)
 
         encoder.setVertexBytes(&cam,
                                length: MemoryLayout<Camera>.stride,

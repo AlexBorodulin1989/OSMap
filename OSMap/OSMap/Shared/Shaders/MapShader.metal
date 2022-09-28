@@ -10,6 +10,7 @@ using namespace metal;
 
 struct Camera {
     float4x4 projection;
+    float4x4 view;
 };
 
 struct MapVertex {
@@ -26,7 +27,7 @@ vertex MapFragment map_vertex(MapVertex vert [[stage_in]],
                               constant Camera &camera [[ buffer(1) ]])
 {
     MapFragment frag;
-    frag.pos = camera.projection * vert.pos;
+    frag.pos =  camera.projection * camera.view * vert.pos;
     frag.texUV = vert.texUV;
 
     return frag;

@@ -10,4 +10,5 @@ import simd
 
 struct Camera {
     let projection: float4x4
+    let view: float4x4
 }

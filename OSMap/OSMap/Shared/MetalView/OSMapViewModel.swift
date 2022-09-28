@@ -9,7 +9,10 @@ import SwiftUI
 import Combine
 
 class OSMapViewModel: ObservableObject {
+/*
     var cancellables = Set<AnyCancellable>()
+
+    var event: NSEvent?
 
     init() {
         NSApp.publisher(for: \.currentEvent)
@@ -19,5 +22,5 @@ class OSMapViewModel: ObservableObject {
                 print("Scroll ", event?.scrollingDeltaY ?? 0)
             }
             .store(in: &cancellables)
-    }
+    }*/
 }
