@@ -34,7 +34,21 @@ class TileFrame: RenderItem {
     static var vertShader: String { "map_vertex" }
     static var fragShader: String { "map_fragment" }
 
-    var zoom: Float = 0.0
+    private var zoom: Int = 1 {
+        didSet {
+            
+        }
+    }
+
+    var cameraOffset: Float = 0.0 {
+        didSet {
+            let cameraDistance = 1 - cameraOffset
+            let zoom = Int(log2(1/cameraDistance))
+            if self.zoom != zoom {
+                self.zoom = zoom
+            }
+        }
+    }
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -151,7 +165,7 @@ class TileFrame: RenderItem {
         encoder.setFragmentTexture(texture?.mtlTexture, index: 0)
 
         let far: Float = 2
-        let near: Float = 0.1
+        let near: Float = 0.05
 
         let interval = far - near
 
@@ -180,7 +194,7 @@ class TileFrame: RenderItem {
             SIMD4<Float>(1, 0, 0, 0),
             SIMD4<Float>(0, 1, 0, 0),
             SIMD4<Float>(0, 0, 1, 0),
-            SIMD4<Float>(0, 0, -zoom, 1)
+            SIMD4<Float>(0, 0, -cameraOffset, 1)
         ])
 
 

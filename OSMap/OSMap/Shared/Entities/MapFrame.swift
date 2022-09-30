@@ -17,12 +17,15 @@ class MapFrame: RenderItem {
 
     var cancellables = Set<AnyCancellable>()
 
-    private var zoom: Float = 0
+    private var cameraOffset: Float = 0
 
     var mouseWeelEvent: NSEvent? {
         didSet {
-            zoom += Float(mouseWeelEvent?.scrollingDeltaY ?? 0) * 0.01
-            print(zoom)
+            let cameraDistance = 1 - cameraOffset
+            cameraOffset += Float(mouseWeelEvent?.scrollingDeltaY ?? 0) * cameraDistance * 0.01
+            if cameraOffset < 0 {
+                cameraOffset = 0
+            }
         }
     }
 
@@ -34,15 +37,17 @@ class MapFrame: RenderItem {
         for row in 0..<visibleTilesByDimCount {
             var columnTiles = [TileFrame]()
             for column in 0..<visibleTilesByDimCount {
-                let tile = TileFrame(device: device, params: [1, row, visibleTilesByDimCount - column - 1]/*"1-\(row)-\(visibleTilesByDimCount - column - 1).png"*/)
+                let tile = TileFrame(device: device, params: [1, row, column])
 
                 let leftPointX = (Float(row) * dimSize) - 1
                 let rightPointX = (Float(row) * dimSize + dimSize) - 1
+                let topPointY = 1 - Float(column) * dimSize
+                let bottomPointY = 1 - (Float(column) * dimSize) - dimSize
 
-                let leftTop = SIMD3<Float>(leftPointX, (Float(column) * dimSize + dimSize) - 1, 1)
-                let rightTop = SIMD3<Float>(rightPointX, (Float(column) * dimSize + dimSize) - 1, 1)
-                let rightBottom = SIMD3<Float>(rightPointX, (Float(column) * dimSize) - 1, 1)
-                let leftBottom = SIMD3<Float>(leftPointX, (Float(column) * dimSize) - 1, 1)
+                let leftTop = SIMD3<Float>(leftPointX, topPointY, 1)
+                let rightTop = SIMD3<Float>(rightPointX, topPointY, 1)
+                let rightBottom = SIMD3<Float>(rightPointX, bottomPointY, 1)
+                let leftBottom = SIMD3<Float>(leftPointX, bottomPointY, 1)
 
                 let verts: [TileFrame.Point] = [
                     TileFrame.Point(pos: leftTop, texUV: SIMD2<Float>(0, 0)),
@@ -77,7 +82,7 @@ extension MapFrame {
     func draw(engine: RenderEngine, encoder: MTLRenderCommandEncoder) {
         encoder.setRenderPipelineState(pipelineState)
         tiles.flatMap{$0}.forEach {[weak self] tile in
-            tile.zoom = self?.zoom ?? 0
+            tile.cameraOffset = self?.cameraOffset ?? 0
             tile.draw(engine: engine, encoder: encoder)
         }
     }

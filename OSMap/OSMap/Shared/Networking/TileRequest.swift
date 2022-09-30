@@ -108,6 +108,7 @@ extension URLSession.RequestTilePublisher {
 
             urlAbsoluteString = urlAbsoluteString.replacingOccurrences(of: "https", with: "")
             urlAbsoluteString = urlAbsoluteString.replacingOccurrences(of: "//", with: "")
+            urlAbsoluteString = urlAbsoluteString.replacingOccurrences(of: ":", with: "")
             urlAbsoluteString = urlAbsoluteString.replacingOccurrences(of: "/", with: "_")
             urlAbsoluteString = urlAbsoluteString.replacingOccurrences(of: ".", with: "_")
 
