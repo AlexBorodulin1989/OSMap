@@ -8,6 +8,10 @@
 import Combine
 import Foundation
 
+enum TileRequestError: Error {
+    case notValidURL
+}
+
 class RequestTileSubscriber: Subscriber {
     typealias Input = Data
     typealias Failure = Error
@@ -96,9 +100,38 @@ extension URLSession.RequestTilePublisher {
         }
 
         func requestTile(completion: @escaping ((Output?, Error?) -> Void)) {
+            guard var urlAbsoluteString = urlRequest.url?.absoluteString
+            else {
+                completion(nil, TileRequestError.notValidURL)
+                return
+            }
+
+            urlAbsoluteString = urlAbsoluteString.replacingOccurrences(of: "https", with: "")
+            urlAbsoluteString = urlAbsoluteString.replacingOccurrences(of: "//", with: "")
+            urlAbsoluteString = urlAbsoluteString.replacingOccurrences(of: "/", with: "_")
+            urlAbsoluteString = urlAbsoluteString.replacingOccurrences(of: ".", with: "_")
+
+            let fileCacheURL = FileManager.default.temporaryDirectory
+                .appendingPathComponent(urlAbsoluteString,
+                                        isDirectory: false)
+
+            if let data = try? Data(contentsOf: fileCacheURL) {
+                completion(data, nil)
+                return
+            }
+
+
             URLSession.shared.dataTask(with: urlRequest) {data, response, error in
                 if let data = data {
-                    completion(data, nil)
+                    do {
+                        if FileManager.default.fileExists(atPath: fileCacheURL.path) {
+                            try FileManager.default.removeItem(at: fileCacheURL)
+                        }
+                        try data.write(to: fileCacheURL)
+                        completion(data, nil)
+                    } catch {
+                        completion(nil, error)
+                    }
                 } else {
                     completion(nil, error)
                 }

@@ -85,10 +85,6 @@ class TileFrame: RenderItem {
                         }
                     }
                 }.store(in: &cancellables)
-
-            //let subscriber = RequestTileSubscriber()
-            //publisher.subscribe(subscriber)
-            //let stampTexture = try! MTKTextureLoader(device: self.device!).newTexture(cgImage: strokeUIImage.cgImage!, options: nil)
         }
 
         func jpegDataFrom(image:NSImage) -> Data {
