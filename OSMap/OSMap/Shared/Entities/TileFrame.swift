@@ -34,16 +34,19 @@ class TileFrame: RenderItem {
     static var vertShader: String { "map_vertex" }
     static var fragShader: String { "map_fragment" }
 
+    let initialCameraDist: Float = 1
+
     private var zoom: Int = MapFrame.Constants.initialZoom {
         didSet {
-            
+            loadImage()
         }
     }
 
     var cameraOffset: Float = 0.0 {
         didSet {
-            let cameraDistance = 1 - cameraOffset
-            let zoom = Int(log2(1 / cameraDistance))
+            let cameraDistance = initialCameraDist - cameraOffset
+            //let eps = NSDecimalNumber(decimal: MapFrame.Constants.epsilon).floatValue
+            let zoom = Int(log2(initialCameraDist / cameraDistance)/* + eps*/) + MapFrame.Constants.initialZoom
             if self.zoom != zoom {
                 self.zoom = zoom
             }
@@ -57,6 +60,8 @@ class TileFrame: RenderItem {
     var y: Float = 0.0
 
     private var cancellables = Set<AnyCancellable>()
+
+    let device: MTLDevice! //need to delete added only for quick solution
 
     static var vertexDescriptor: MTLVertexDescriptor {
         let vertDescriptor = MTLVertexDescriptor()
@@ -74,50 +79,54 @@ class TileFrame: RenderItem {
     }
 
     required init(device: MTLDevice, params: Any...) {
+        self.device = device
+
         if let params = params.first as? [Int] {
             self.texture = Texture(device: device, imageName: "no_img.png")
-
             column = params[1]
             row = params[2]
 
-            let visibleTilesCountPerDim = NSDecimalNumber(decimal: pow(2.0, zoom) + MapFrame.Constants.epsilon).intValue
-
-            let tileScreenSize = 2.0 / Float(visibleTilesCountPerDim)
-            let firstTileIndexRow = Int(round((x + 1) * 0.5 * Float(visibleTilesCountPerDim)))
-            let firstTileIndexColumn = Int(round((y + 1) * 0.5 * Float(visibleTilesCountPerDim)))
-
-            let request = URLRequest(url: URL(string: "https://tile.openstreetmap.org/\(zoom)/\(firstTileIndexColumn + column)/\(firstTileIndexRow + row).png")!)
-            let publisher: URLSession.RequestTilePublisher = URLSession.RequestTilePublisher(urlRequest: request)
-            publisher
-                .sink { error in
-
-                } receiveValue: { data in
-                    DispatchQueue.main.async {[weak self] in
-                        guard let self = self
-                        else {
-                            return
-                        }
-                        let image = NSImage(data: data)!
-                        let data = self.jpegDataFrom(image:image)
-
-                        if let image = NSImage(data: data) {
-                            var imageRect = CGRect(x: 0, y: 0, width: image.size.width, height: image.size.height)
-                            if let imageRef = image.cgImage(forProposedRect: &imageRect, context: nil, hints: nil) {
-                                do {
-                                    let mtlTexture = try MTKTextureLoader(device: device).newTexture(cgImage: imageRef, options: nil)
-                                    self.texture = Texture(mtlTexture: mtlTexture)
-                                } catch {
-                                    print(error.localizedDescription)
-                                }
-                            }
-
-                        }
-                    }
-                }.store(in: &cancellables)
+            self.loadImage()
         } else {
             row = 0
             column = 0
         }
+    }
+
+    func loadImage() {
+        let visibleTilesCountPerDim = NSDecimalNumber(decimal: pow(2.0, zoom) + MapFrame.Constants.epsilon).intValue
+
+        let firstTileIndexRow = Int(round((x + 1) * 0.5 * Float(visibleTilesCountPerDim)))
+        let firstTileIndexColumn = Int(round((y + 1) * 0.5 * Float(visibleTilesCountPerDim)))
+
+        let request = URLRequest(url: URL(string: "https://tile.openstreetmap.org/\(zoom)/\(firstTileIndexColumn + column)/\(firstTileIndexRow + row).png")!)
+        let publisher: URLSession.RequestTilePublisher = URLSession.RequestTilePublisher(urlRequest: request)
+        publisher
+            .sink { error in
+
+            } receiveValue: { data in
+                DispatchQueue.main.async {[weak self] in
+                    guard let self = self
+                    else {
+                        return
+                    }
+                    let image = NSImage(data: data)!
+                    let data = self.jpegDataFrom(image:image)
+
+                    if let image = NSImage(data: data) {
+                        var imageRect = CGRect(x: 0, y: 0, width: image.size.width, height: image.size.height)
+                        if let imageRef = image.cgImage(forProposedRect: &imageRect, context: nil, hints: nil) {
+                            do {
+                                let mtlTexture = try MTKTextureLoader(device: self.device).newTexture(cgImage: imageRef, options: nil)
+                                self.texture = Texture(mtlTexture: mtlTexture)
+                            } catch {
+                                print(error.localizedDescription)
+                            }
+                        }
+
+                    }
+                }
+            }.store(in: &cancellables)
     }
 
     func jpegDataFrom(image:NSImage) -> Data {
@@ -208,11 +217,21 @@ class TileFrame: RenderItem {
             ])
         }
 
+        var cameraDistance = initialCameraDist - cameraOffset
+
+        let camDistInverted = NSDecimalNumber(decimal: pow(2.0, zoom - MapFrame.Constants.initialZoom)).floatValue
+
+        cameraDistance = cameraDistance*camDistInverted
+
+        let camOffset = initialCameraDist - cameraDistance
+
+        print(camOffset)
+
         let viewMatrix = matrix_float4x4([
             SIMD4<Float>(1, 0, 0, 0),
             SIMD4<Float>(0, 1, 0, 0),
             SIMD4<Float>(0, 0, 1, 0),
-            SIMD4<Float>(0, 0, -cameraOffset, 1)
+            SIMD4<Float>(0, 0, -camOffset, 1)
         ])
 
 
