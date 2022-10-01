@@ -9,7 +9,7 @@ import MetalKit
 import Combine
 
 class MapFrame: RenderItem {
-    private var visibleTilesByDimCount = 2
+    private var initialZoom = 1
     
     private var tiles = [[TileFrame]]()
 
@@ -18,6 +18,8 @@ class MapFrame: RenderItem {
     var cancellables = Set<AnyCancellable>()
 
     private var cameraOffset: Float = 0
+
+    let epsilon: Decimal = 0.0000001
 
     var mouseWeelEvent: NSEvent? {
         didSet {
@@ -30,13 +32,15 @@ class MapFrame: RenderItem {
     }
 
     required init(device: MTLDevice, params: Any...) {
+        let visibleTilesCount = NSDecimalNumber(decimal: pow(2.0, initialZoom) + epsilon).intValue
+
         pipelineState = TileFrame.pipelineState(device: device, pixelColorFormat: .bgra8Unorm)
 
-        let dimSize: Float = 2 / Float(visibleTilesByDimCount)
+        let dimSize: Float = 2 / Float(visibleTilesCount)
 
-        for row in 0..<visibleTilesByDimCount {
+        for row in 0..<visibleTilesCount {
             var columnTiles = [TileFrame]()
-            for column in 0..<visibleTilesByDimCount {
+            for column in 0..<visibleTilesCount {
                 let tile = TileFrame(device: device, params: [1, row, column])
 
                 let leftPointX = (Float(row) * dimSize) - 1
@@ -68,7 +72,10 @@ class MapFrame: RenderItem {
     }
 }
 
+// MARK: - Events
 extension MapFrame {
+
+
     func setScrollWeelListener() {
         NSApp.publisher(for: \.currentEvent)
             .filter { event in event?.type == .scrollWheel }

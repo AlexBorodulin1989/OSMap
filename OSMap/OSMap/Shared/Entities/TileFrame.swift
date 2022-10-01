@@ -50,6 +50,9 @@ class TileFrame: RenderItem {
         }
     }
 
+    let row: Int
+    let column: Int
+
     private var cancellables = Set<AnyCancellable>()
 
     static var vertexDescriptor: MTLVertexDescriptor {
@@ -71,6 +74,9 @@ class TileFrame: RenderItem {
         if let params = params.first as? [Int] {
             self.texture = Texture(device: device, imageName: "no_img.png")
 
+            row = params[1]
+            column = params[2]
+
             let request = URLRequest(url: URL(string: "https://tile.openstreetmap.org/\(params[0])/\(params[1])/\(params[2]).png")!)
             let publisher: URLSession.RequestTilePublisher = URLSession.RequestTilePublisher(urlRequest: request)
             publisher
@@ -83,7 +89,7 @@ class TileFrame: RenderItem {
                             return
                         }
                         let image = NSImage(data: data)!
-                        let data = jpegDataFrom(image:image)
+                        let data = self.jpegDataFrom(image:image)
 
                         if let image = NSImage(data: data) {
                             var imageRect = CGRect(x: 0, y: 0, width: image.size.width, height: image.size.height)
@@ -99,14 +105,17 @@ class TileFrame: RenderItem {
                         }
                     }
                 }.store(in: &cancellables)
+        } else {
+            row = 0
+            column = 0
         }
+    }
 
-        func jpegDataFrom(image:NSImage) -> Data {
-                let cgImage = image.cgImage(forProposedRect: nil, context: nil, hints: nil)!
-                let bitmapRep = NSBitmapImageRep(cgImage: cgImage)
-                let jpegData = bitmapRep.representation(using: NSBitmapImageRep.FileType.jpeg, properties: [:])!
-                return jpegData
-            }
+    func jpegDataFrom(image:NSImage) -> Data {
+        let cgImage = image.cgImage(forProposedRect: nil, context: nil, hints: nil)!
+        let bitmapRep = NSBitmapImageRep(cgImage: cgImage)
+        let jpegData = bitmapRep.representation(using: NSBitmapImageRep.FileType.jpeg, properties: [:])!
+        return jpegData
     }
 
     func setVertices(verts: [Point], device: MTLDevice) {
