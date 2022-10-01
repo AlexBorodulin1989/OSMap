@@ -34,7 +34,7 @@ class TileFrame: RenderItem {
     static var vertShader: String { "map_vertex" }
     static var fragShader: String { "map_fragment" }
 
-    private var zoom: Int = 1 {
+    private var zoom: Int = MapFrame.Constants.initialZoom {
         didSet {
             
         }
@@ -43,7 +43,7 @@ class TileFrame: RenderItem {
     var cameraOffset: Float = 0.0 {
         didSet {
             let cameraDistance = 1 - cameraOffset
-            let zoom = Int(log2(1/cameraDistance))
+            let zoom = Int(log2(1 / cameraDistance))
             if self.zoom != zoom {
                 self.zoom = zoom
             }
@@ -52,6 +52,9 @@ class TileFrame: RenderItem {
 
     let row: Int
     let column: Int
+
+    var x: Float = 0.0
+    var y: Float = 0.0
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -74,10 +77,16 @@ class TileFrame: RenderItem {
         if let params = params.first as? [Int] {
             self.texture = Texture(device: device, imageName: "no_img.png")
 
-            row = params[1]
-            column = params[2]
+            column = params[1]
+            row = params[2]
 
-            let request = URLRequest(url: URL(string: "https://tile.openstreetmap.org/\(params[0])/\(params[1])/\(params[2]).png")!)
+            let visibleTilesCountPerDim = NSDecimalNumber(decimal: pow(2.0, zoom) + MapFrame.Constants.epsilon).intValue
+
+            let tileScreenSize = 2.0 / Float(visibleTilesCountPerDim)
+            let firstTileIndexRow = Int(round((x + 1) * 0.5 * Float(visibleTilesCountPerDim)))
+            let firstTileIndexColumn = Int(round((y + 1) * 0.5 * Float(visibleTilesCountPerDim)))
+
+            let request = URLRequest(url: URL(string: "https://tile.openstreetmap.org/\(zoom)/\(firstTileIndexColumn + column)/\(firstTileIndexRow + row).png")!)
             let publisher: URLSession.RequestTilePublisher = URLSession.RequestTilePublisher(urlRequest: request)
             publisher
                 .sink { error in
@@ -183,7 +192,7 @@ class TileFrame: RenderItem {
 
         let projMatrix: matrix_float4x4
 
-        if engine.aspectRatio < 1 {
+        if engine.aspectRatio < 1 { // width > height
             projMatrix = matrix_float4x4([
                 SIMD4<Float>(1, 0, 0, 0),
                 SIMD4<Float>(0, 1/engine.aspectRatio, 0, 0),

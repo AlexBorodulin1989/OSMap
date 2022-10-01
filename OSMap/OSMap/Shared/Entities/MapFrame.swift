@@ -8,18 +8,22 @@
 import MetalKit
 import Combine
 
+extension MapFrame {
+    enum Constants {
+        static let initialZoom: Int = 1
+        static let epsilon: Decimal = 0.0000001
+    }
+}
+
 class MapFrame: RenderItem {
-    private var initialZoom = 1
     
     private var tiles = [[TileFrame]]()
 
     private let pipelineState: MTLRenderPipelineState
 
-    var cancellables = Set<AnyCancellable>()
+    private var cancellables = Set<AnyCancellable>()
 
     private var cameraOffset: Float = 0
-
-    let epsilon: Decimal = 0.0000001
 
     var mouseWeelEvent: NSEvent? {
         didSet {
@@ -32,21 +36,25 @@ class MapFrame: RenderItem {
     }
 
     required init(device: MTLDevice, params: Any...) {
-        let visibleTilesCount = NSDecimalNumber(decimal: pow(2.0, initialZoom) + epsilon).intValue
+        if Constants.initialZoom < 1 {
+            fatalError("zoom of 0 not supported")
+        }
+
+        let visibleTilesCountPerDim = NSDecimalNumber(decimal: pow(2.0, Constants.initialZoom) + Constants.epsilon).intValue
 
         pipelineState = TileFrame.pipelineState(device: device, pixelColorFormat: .bgra8Unorm)
 
-        let dimSize: Float = 2 / Float(visibleTilesCount)
+        let dimSize: Float = 2 / Float(visibleTilesCountPerDim)
 
-        for row in 0..<visibleTilesCount {
+        for column in 0..<visibleTilesCountPerDim {
             var columnTiles = [TileFrame]()
-            for column in 0..<visibleTilesCount {
-                let tile = TileFrame(device: device, params: [1, row, column])
+            for row in 0..<visibleTilesCountPerDim {
+                let tile = TileFrame(device: device, params: [1, column - visibleTilesCountPerDim / 2, row - visibleTilesCountPerDim / 2])
 
-                let leftPointX = (Float(row) * dimSize) - 1
-                let rightPointX = (Float(row) * dimSize + dimSize) - 1
-                let topPointY = 1 - Float(column) * dimSize
-                let bottomPointY = 1 - (Float(column) * dimSize) - dimSize
+                let leftPointX = (Float(column) * dimSize) - 1
+                let rightPointX = (Float(column) * dimSize + dimSize) - 1
+                let topPointY = 1 - Float(row) * dimSize
+                let bottomPointY = 1 - (Float(row) * dimSize) - dimSize
 
                 let leftTop = SIMD3<Float>(leftPointX, topPointY, 1)
                 let rightTop = SIMD3<Float>(rightPointX, topPointY, 1)
