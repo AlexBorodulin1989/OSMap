@@ -17,7 +17,6 @@ typealias UniversalView = UIView
 #endif
 
 struct OSMapView: ViewRepresentable {
-    @StateObject private var viewModel = OSMapViewModel()
     @State private var metalView = MTKView()
 
 #if os(macOS)

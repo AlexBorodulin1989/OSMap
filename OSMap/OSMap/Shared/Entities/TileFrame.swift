@@ -46,8 +46,7 @@ class TileFrame: RenderItem {
     var cameraOffset: Float = 0.0 {
         didSet {
             let cameraDistance = initialCameraDist - cameraOffset
-            //let eps = NSDecimalNumber(decimal: MapFrame.Constants.epsilon).floatValue
-            let zoom = Int(log2(initialCameraDist / cameraDistance)/* + eps*/) + MapFrame.Constants.initialZoom
+            let zoom = Int(log2(initialCameraDist / cameraDistance)) + MapFrame.Constants.initialZoom
             if self.zoom != zoom {
                 self.zoom = zoom
             }
@@ -225,8 +224,6 @@ class TileFrame: RenderItem {
         cameraDistance = cameraDistance*camDistInverted
 
         let camOffset = initialCameraDist - cameraDistance
-
-        print(camOffset)
 
         let viewMatrix = matrix_float4x4([
             SIMD4<Float>(1, 0, 0, 0),

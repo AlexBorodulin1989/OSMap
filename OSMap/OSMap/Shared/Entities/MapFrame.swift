@@ -23,9 +23,20 @@ class MapFrame: RenderItem {
 
     private var cancellables = Set<AnyCancellable>()
 
-    private var cameraOffset: Float = 0
+    let initialCameraDist: Float = 1
 
-    private var x: Float = 0
+    private var cameraOffset: Float = 0.875 
+
+    private var zoom: Int = MapFrame.Constants.initialZoom
+
+    private var x: Float = 0 {
+        didSet {
+            if x < -0.5 {
+                x += 1
+            }
+            print(x)
+        }
+    }
     private var y: Float = 0
 
     var mouseWeelEvent: NSEvent? {
@@ -40,8 +51,8 @@ class MapFrame: RenderItem {
 
     var leftMouseDragged: NSEvent? {
         didSet {
-            x += Float(leftMouseDragged?.deltaX ?? 0) * 0.0001
-            y -= Float(leftMouseDragged?.deltaY ?? 0) * 0.0001
+            x += Float(leftMouseDragged?.deltaX ?? 0) * 0.0004
+            y -= Float(leftMouseDragged?.deltaY ?? 0) * 0.0004
         }
     }
 
