@@ -72,6 +72,12 @@ extension RenderEngine: MTKViewDelegate {
     ) {
         let width = size.width > 1 ? size.width : 1
         aspectRatio = Float(size.height / width)
+
+        for (_, renderGroup) in renderGroups {
+            renderGroup.renderUnits.forEach { renderItem in
+                (renderItem as? RenderingRectSizeListener)?.rectDidChange(size: size)
+            }
+        }
     }
 
     func draw(in view: MTKView) {

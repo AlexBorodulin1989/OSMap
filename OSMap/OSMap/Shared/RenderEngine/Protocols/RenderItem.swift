@@ -12,4 +12,3 @@ protocol RenderItem {
 
     func draw(engine: RenderEngine, encoder: MTLRenderCommandEncoder)
 }
-

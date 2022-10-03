@@ -15,7 +15,7 @@ extension MapFrame {
     }
 }
 
-class MapFrame: RenderItem {
+final class MapFrame: RenderItem {
     
     private var tiles = [[TileFrame]]()
 
@@ -25,19 +25,14 @@ class MapFrame: RenderItem {
 
     let initialCameraDist: Float = 1
 
-    private var cameraOffset: Float = 0.875 
+    private var cameraOffset: Float = 0
 
     private var zoom: Int = MapFrame.Constants.initialZoom
 
-    private var x: Float = 0 {
-        didSet {
-            if x < -0.5 {
-                x += 1
-            }
-            print(x)
-        }
-    }
+    private var x: Float = 0
     private var y: Float = 0
+
+    private var renderScreenSize: CGSize = .zero
 
     var mouseWeelEvent: NSEvent? {
         didSet {
@@ -51,8 +46,13 @@ class MapFrame: RenderItem {
 
     var leftMouseDragged: NSEvent? {
         didSet {
-            x += Float(leftMouseDragged?.deltaX ?? 0) * 0.0004
-            y -= Float(leftMouseDragged?.deltaY ?? 0) * 0.0004
+            if renderScreenSize.width > renderScreenSize.height {
+
+                let ratio = 2 / renderScreenSize.width
+
+                x += Float((leftMouseDragged?.deltaX ?? 0) * ratio)
+                y -= Float((leftMouseDragged?.deltaY ?? 0) * ratio)
+            }
         }
     }
 
@@ -118,6 +118,12 @@ extension MapFrame {
             .throttle(for: .milliseconds(1), scheduler: DispatchQueue.main, latest: true)
             .assign(to: \.leftMouseDragged, on: self)
             .store(in: &cancellables)
+    }
+}
+
+extension MapFrame: RenderingRectSizeListener {
+    func rectDidChange(size: CGSize) {
+        self.renderScreenSize = size
     }
 }
 
