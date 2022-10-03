@@ -32,7 +32,7 @@ final class MapFrame: RenderItem {
     private var x: Float = 0
     private var y: Float = 0
 
-    private var renderScreenSize: CGSize = .zero
+    var screenSizeToNDCRatio: CGFloat = 1
 
     var mouseWeelEvent: NSEvent? {
         didSet {
@@ -46,13 +46,8 @@ final class MapFrame: RenderItem {
 
     var leftMouseDragged: NSEvent? {
         didSet {
-            if renderScreenSize.width > renderScreenSize.height {
-
-                let ratio = 2 / renderScreenSize.width
-
-                x += Float((leftMouseDragged?.deltaX ?? 0) * ratio)
-                y -= Float((leftMouseDragged?.deltaY ?? 0) * ratio)
-            }
+            x += Float((leftMouseDragged?.deltaX ?? 0) * screenSizeToNDCRatio)
+            y -= Float((leftMouseDragged?.deltaY ?? 0) * screenSizeToNDCRatio)
         }
     }
 
@@ -123,7 +118,11 @@ extension MapFrame {
 
 extension MapFrame: RenderingRectSizeListener {
     func rectDidChange(size: CGSize) {
-        self.renderScreenSize = size
+        if size.width > size.height {
+            screenSizeToNDCRatio = 2 / size.width
+        } else {
+            screenSizeToNDCRatio = 2 / size.height
+        }
     }
 }
 
