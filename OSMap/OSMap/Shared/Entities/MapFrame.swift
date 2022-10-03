@@ -25,6 +25,9 @@ class MapFrame: RenderItem {
 
     private var cameraOffset: Float = 0
 
+    private var x: Float = 0
+    private var y: Float = 0
+
     var mouseWeelEvent: NSEvent? {
         didSet {
             let cameraDistance = 1 - cameraOffset
@@ -32,6 +35,13 @@ class MapFrame: RenderItem {
             if cameraOffset < 0 {
                 cameraOffset = 0
             }
+        }
+    }
+
+    var leftMouseDragged: NSEvent? {
+        didSet {
+            x += Float(leftMouseDragged?.deltaX ?? 0) * 0.0001
+            y -= Float(leftMouseDragged?.deltaY ?? 0) * 0.0001
         }
     }
 
@@ -77,18 +87,25 @@ class MapFrame: RenderItem {
         }
 
         setScrollWeelListener()
+        setLeftMouseDraggedListener()
     }
 }
 
 // MARK: - Events
 extension MapFrame {
-
-
     func setScrollWeelListener() {
         NSApp.publisher(for: \.currentEvent)
             .filter { event in event?.type == .scrollWheel }
             .throttle(for: .milliseconds(1), scheduler: DispatchQueue.main, latest: true)
             .assign(to: \.mouseWeelEvent, on: self)
+            .store(in: &cancellables)
+    }
+
+    func setLeftMouseDraggedListener() {
+        NSApp.publisher(for: \.currentEvent)
+            .filter { event in event?.type == .leftMouseDragged }
+            .throttle(for: .milliseconds(1), scheduler: DispatchQueue.main, latest: true)
+            .assign(to: \.leftMouseDragged, on: self)
             .store(in: &cancellables)
     }
 }
@@ -98,6 +115,8 @@ extension MapFrame {
         encoder.setRenderPipelineState(pipelineState)
         tiles.flatMap{$0}.forEach {[weak self] tile in
             tile.cameraOffset = self?.cameraOffset ?? 0
+            tile.x = x
+            tile.y = y
             tile.draw(engine: engine, encoder: encoder)
         }
     }

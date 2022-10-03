@@ -38,6 +38,7 @@ class TileFrame: RenderItem {
 
     private var zoom: Int = MapFrame.Constants.initialZoom {
         didSet {
+            self.texture = Texture(device: device, imageName: "no_img.png")
             loadImage()
         }
     }
@@ -231,7 +232,7 @@ class TileFrame: RenderItem {
             SIMD4<Float>(1, 0, 0, 0),
             SIMD4<Float>(0, 1, 0, 0),
             SIMD4<Float>(0, 0, 1, 0),
-            SIMD4<Float>(0, 0, -camOffset, 1)
+            SIMD4<Float>(x, y, -camOffset, 1)
         ])
 
 
