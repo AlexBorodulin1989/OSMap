@@ -150,6 +150,8 @@ extension MapFrame {
         encoder.setRenderPipelineState(pipelineState)
         tiles.flatMap{$0}.forEach {[weak self] tile in
             tile.cameraOffset = self?.cameraOffset ?? 0
+            tile.zoom = zoom
+
             tile.x = x
             tile.y = y
             tile.draw(engine: engine, encoder: encoder)

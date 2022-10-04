@@ -36,22 +36,16 @@ class TileFrame: RenderItem {
 
     let initialCameraDist: Float = 1
 
-    private var zoom: Int = MapFrame.Constants.initialZoom {
+    var zoom: Int = MapFrame.Constants.initialZoom {
         didSet {
-            self.texture = Texture(device: device, imageName: "no_img.png")
-            loadImage()
-        }
-    }
-
-    var cameraOffset: Float = 0.0 {
-        didSet {
-            let cameraDistance = initialCameraDist - cameraOffset
-            let zoom = Int(log2(initialCameraDist / cameraDistance)) + MapFrame.Constants.initialZoom
-            if self.zoom != zoom {
-                self.zoom = zoom
+            if oldValue != zoom {
+                self.texture = Texture(device: device, imageName: "no_img.png")
+                loadImage()
             }
         }
     }
+
+    var cameraOffset: Float = 0.0
 
     let row: Int
     let column: Int
