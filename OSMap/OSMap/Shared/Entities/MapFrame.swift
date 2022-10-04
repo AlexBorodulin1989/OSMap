@@ -31,9 +31,7 @@ final class MapFrame: RenderItem {
         didSet {
             let cameraDistance = initialCameraDist - cameraOffset
             let zoom = Int(log2(initialCameraDist / cameraDistance)) + MapFrame.Constants.initialZoom
-            if self.zoom != zoom {
-                self.zoom = zoom
-            }
+            self.zoom = zoom
         }
     }
 
