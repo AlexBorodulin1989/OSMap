@@ -25,9 +25,17 @@ final class MapFrame: RenderItem {
 
     let initialCameraDist: Float = 1
 
-    private var cameraOffset: Float = 0
-
     private var zoom: Int = MapFrame.Constants.initialZoom
+
+    var cameraOffset: Float = 0.0 {
+        didSet {
+            let cameraDistance = initialCameraDist - cameraOffset
+            let zoom = Int(log2(initialCameraDist / cameraDistance)) + MapFrame.Constants.initialZoom
+            if self.zoom != zoom {
+                self.zoom = zoom
+            }
+        }
+    }
 
     private var x: Float = 0
     private var y: Float = 0
@@ -46,8 +54,19 @@ final class MapFrame: RenderItem {
 
     var leftMouseDragged: NSEvent? {
         didSet {
-            x += Float((leftMouseDragged?.deltaX ?? 0) * screenSizeToNDCRatio)
-            y -= Float((leftMouseDragged?.deltaY ?? 0) * screenSizeToNDCRatio)
+            var cameraDistance = initialCameraDist - cameraOffset
+
+            let camDistInverted = NSDecimalNumber(decimal: pow(2.0, zoom - MapFrame.Constants.initialZoom)).floatValue
+
+            cameraDistance = cameraDistance*camDistInverted
+            let zoom = initialCameraDist / cameraDistance
+
+            let camOffset = initialCameraDist - cameraDistance
+
+            print(camOffset)
+
+            x += Float((leftMouseDragged?.deltaX ?? 0) * screenSizeToNDCRatio) / zoom
+            y -= Float((leftMouseDragged?.deltaY ?? 0) * screenSizeToNDCRatio) / zoom
         }
     }
 
