@@ -50,8 +50,31 @@ class TileFrame: RenderItem {
     let row: Int
     let column: Int
 
-    var x: Float = 0.0
+    var x: Float = 0.0 {
+        didSet {
+            deltaX = (x - center.x) / (initialCameraDist - cameraOffset)
+            if deltaX <= -1 || deltaX >= 1 {
+                loadImage()
+            }
+        }
+    }
+
     var y: Float = 0.0
+    {
+        didSet {
+            deltaY = (y - center.y) / (initialCameraDist - cameraOffset)
+            if deltaY <= -1 || deltaY >= 1 {
+                loadImage()
+            }
+        }
+    }
+
+    var deltaX: Float = 0.0
+    var deltaY: Float = 0.0
+
+    var center = Position(x: 0, y: 0)
+
+    let ndcSize: Float = 2
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -88,10 +111,21 @@ class TileFrame: RenderItem {
     }
 
     func loadImage() {
-        let visibleTilesCountPerDim = NSDecimalNumber(decimal: pow(2.0, zoom) + MapFrame.Constants.epsilon).intValue
+        let tilesPerDimension = NSDecimalNumber(decimal: pow(2.0, zoom) + MapFrame.Constants.epsilon).intValue
 
-        let firstTileIndexRow = Int(round((x + 1) * 0.5 * Float(visibleTilesCountPerDim)))
-        let firstTileIndexColumn = Int(round((y + 1) * 0.5 * Float(visibleTilesCountPerDim)))
+        let firstTileIndexRow = Int(round((y + 1) * 0.5 * Float(tilesPerDimension)))
+        let firstTileIndexColumn = Int(round((x + 1) * 0.5 * Float(tilesPerDimension)))
+
+        if firstTileIndexRow <= 0 ||
+            firstTileIndexColumn <= 0 ||
+            firstTileIndexRow >= tilesPerDimension ||
+            firstTileIndexColumn >= tilesPerDimension {
+            return
+        }
+
+        let tileSize = ndcSize / Float(tilesPerDimension)
+
+        center = Position(x: Float(firstTileIndexColumn) * tileSize - 1, y: Float(firstTileIndexRow) * tileSize - 1)
 
         let request = URLRequest(url: URL(string: "https://tile.openstreetmap.org/\(zoom)/\(firstTileIndexColumn + column)/\(firstTileIndexRow + row).png")!)
         let publisher: URLSession.RequestTilePublisher = URLSession.RequestTilePublisher(urlRequest: request)
@@ -223,7 +257,7 @@ class TileFrame: RenderItem {
             SIMD4<Float>(1, 0, 0, 0),
             SIMD4<Float>(0, 1, 0, 0),
             SIMD4<Float>(0, 0, 1, 0),
-            SIMD4<Float>(x, y, -camOffset, 1)
+            SIMD4<Float>(-deltaX, deltaY, -camOffset, 1)
         ])
 
 
