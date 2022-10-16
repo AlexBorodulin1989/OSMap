@@ -138,30 +138,48 @@ class TileFrame: RenderItem {
                     else {
                         return
                     }
-                    let image = NSImage(data: data)!
-                    let data = self.jpegDataFrom(image:image)
+                    guard let image = NSImage(data: data)
+                    else {
+                        print("Dont load image")
+                        return
+                    }
+                    var imageRect = CGRect(x: 0, y: 0, width: image.size.width, height: image.size.height)
+                    if let imageRef = image.cgImage(forProposedRect: &imageRect, context: nil, hints: nil) {
+                        let colorSpace = CGColorSpace(name: CGColorSpace.sRGB)
 
-                    if let image = NSImage(data: data) {
-                        var imageRect = CGRect(x: 0, y: 0, width: image.size.width, height: image.size.height)
-                        if let imageRef = image.cgImage(forProposedRect: &imageRect, context: nil, hints: nil) {
-                            do {
-                                let mtlTexture = try MTKTextureLoader(device: self.device).newTexture(cgImage: imageRef, options: nil)
-                                self.texture = Texture(mtlTexture: mtlTexture)
-                            } catch {
-                                print(error.localizedDescription)
-                            }
+                        let cgContext = CGContext(data: nil,
+                                                  width: imageRef.width,
+                                                  height: imageRef.height,
+                                                  bitsPerComponent: 8,
+                                                  bytesPerRow: 0,
+                                                  space: colorSpace!,
+                                                  bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue)
+
+                        cgContext?.draw(imageRef, in: CGRect(origin: .zero, size: CGSize(width: imageRef.width, height: imageRef.height)))
+
+                        guard let newCGImage = cgContext?.makeImage()
+                        else {
+                            print("Cannot load image")
+                            return
                         }
 
+                        let usage: MTLTextureUsage = .shaderRead
+
+                        let textureOptions: [MTKTextureLoader.Option: Any] = [
+                            .textureUsage: NSNumber(value: usage.rawValue),
+                            .generateMipmaps: NSNumber(value: false),
+                            .SRGB: NSNumber(value: false)
+                        ]
+
+                        do {
+                            let mtlTexture = try MTKTextureLoader(device: self.device).newTexture(cgImage: newCGImage, options: textureOptions)
+                            self.texture = Texture(mtlTexture: mtlTexture)
+                        } catch {
+                            print(error.localizedDescription)
+                        }
                     }
                 }
             }.store(in: &cancellables)
-    }
-
-    func jpegDataFrom(image:NSImage) -> Data {
-        let cgImage = image.cgImage(forProposedRect: nil, context: nil, hints: nil)!
-        let bitmapRep = NSBitmapImageRep(cgImage: cgImage)
-        let jpegData = bitmapRep.representation(using: NSBitmapImageRep.FileType.jpeg, properties: [:])!
-        return jpegData
     }
 
     func setVertices(verts: [Point], device: MTLDevice) {

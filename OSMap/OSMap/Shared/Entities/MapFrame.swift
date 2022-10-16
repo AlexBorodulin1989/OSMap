@@ -10,7 +10,7 @@ import Combine
 
 extension MapFrame {
     enum Constants {
-        static let initialZoom: Int = 1
+        static let initialZoom: Int = 2
         static let epsilon: Decimal = 0.0000001
     }
 }
@@ -23,7 +23,7 @@ final class MapFrame: RenderItem {
 
     private var cancellables = Set<AnyCancellable>()
 
-    let initialCameraDist: Float = 1
+    private let initialCameraDist: Float = 1
 
     private var zoom: Int = MapFrame.Constants.initialZoom
 

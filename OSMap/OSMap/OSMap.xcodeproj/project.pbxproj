@@ -47,6 +47,7 @@
 		9DC6D7C628D773D000C03283 /* 1-0-1.png in Resources */ = {isa = PBXBuildFile; fileRef = 9DC6D7C428D773D000C03283 /* 1-0-1.png */; };
 		9DC6D7C828D773FB00C03283 /* 1-1-1.png in Resources */ = {isa = PBXBuildFile; fileRef = 9DC6D7C728D773FB00C03283 /* 1-1-1.png */; };
 		9DC6D7C928D773FB00C03283 /* 1-1-1.png in Resources */ = {isa = PBXBuildFile; fileRef = 9DC6D7C728D773FB00C03283 /* 1-1-1.png */; };
+		9DC8D89F28F8AC8300DB386B /* UIImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC8D89E28F8AC8300DB386B /* UIImage+Extensions.swift */; };
 		9DF0430828E4B05B001BBEA2 /* TileRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DF0430728E4B05B001BBEA2 /* TileRequest.swift */; };
 		9DF0430928E4B05B001BBEA2 /* TileRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DF0430728E4B05B001BBEA2 /* TileRequest.swift */; };
 		9DF0430E28E4C853001BBEA2 /* no_img.png in Resources */ = {isa = PBXBuildFile; fileRef = 9DF0430D28E4C853001BBEA2 /* no_img.png */; };
@@ -98,6 +99,7 @@
 		9DC6D7C128D7739400C03283 /* 1-1-0.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "1-1-0.png"; sourceTree = "<group>"; };
 		9DC6D7C428D773D000C03283 /* 1-0-1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "1-0-1.png"; sourceTree = "<group>"; };
 		9DC6D7C728D773FB00C03283 /* 1-1-1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "1-1-1.png"; sourceTree = "<group>"; };
+		9DC8D89E28F8AC8300DB386B /* UIImage+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extensions.swift"; sourceTree = "<group>"; };
 		9DF0430728E4B05B001BBEA2 /* TileRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TileRequest.swift; sourceTree = "<group>"; };
 		9DF0430D28E4C853001BBEA2 /* no_img.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = no_img.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -178,6 +180,7 @@
 		9DC655DD28C376A9009906BA /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				9DC8D89D28F8AC5B00DB386B /* Extensions */,
 				9D3EEF6F28C48FBF00F03F48 /* Example */,
 				9DF0430628E4B027001BBEA2 /* Networking */,
 				9DC6562928C39897009906BA /* MetalView */,
@@ -263,6 +266,14 @@
 				9DC6562A28C398A3009906BA /* OSMapView.swift */,
 			);
 			path = MetalView;
+			sourceTree = "<group>";
+		};
+		9DC8D89D28F8AC5B00DB386B /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				9DC8D89E28F8AC8300DB386B /* UIImage+Extensions.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 		9DF0430628E4B027001BBEA2 /* Networking */ = {
@@ -453,6 +464,7 @@
 				9D29B6BA28D521620049FA3A /* Camera.swift in Sources */,
 				9DC6560828C376AA009906BA /* ContentView.swift in Sources */,
 				9DF0430828E4B05B001BBEA2 /* TileRequest.swift in Sources */,
+				9DC8D89F28F8AC8300DB386B /* UIImage+Extensions.swift in Sources */,
 				9DC6562728C3969A009906BA /* RenderEngine.swift in Sources */,
 				9DC6560628C376AA009906BA /* OSMapApp.swift in Sources */,
 			);
