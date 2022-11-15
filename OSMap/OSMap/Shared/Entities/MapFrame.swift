@@ -78,17 +78,19 @@ final class MapFrame: RenderItem {
 
         pipelineState = TileFrame.pipelineState(device: device, pixelColorFormat: .bgra8Unorm)
 
-        let dimSize: Float = 2 / Float(visibleTilesCountPerDim)
+        let tileSize: Float = 2 / Float(visibleTilesCountPerDim)
 
-        for column in 0..<visibleTilesCountPerDim {
+        for column in 0..<(visibleTilesCountPerDim + 2) {
             var columnTiles = [TileFrame]()
-            for row in 0..<visibleTilesCountPerDim {
-                let tile = TileFrame(device: device, params: [1, column - visibleTilesCountPerDim / 2, row - visibleTilesCountPerDim / 2])
+            for row in 0..<(visibleTilesCountPerDim + 2) {
+                let tileColumn = column - (visibleTilesCountPerDim + 2) / 2
+                let tileRow = row - (visibleTilesCountPerDim + 2) / 2
+                let tile = TileFrame(device: device, params: [tileSize, tileColumn, tileRow])
 
-                let leftPointX = (Float(column) * dimSize) - 1
-                let rightPointX = (Float(column) * dimSize + dimSize) - 1
-                let topPointY = 1 - Float(row) * dimSize
-                let bottomPointY = 1 - (Float(row) * dimSize) - dimSize
+                let leftPointX = (Float(column) * tileSize) - 1 - tileSize
+                let rightPointX = (Float(column) * tileSize + tileSize) - 1 - tileSize
+                let topPointY = 1 - Float(row) * tileSize + tileSize
+                let bottomPointY = 1 - (Float(row) * tileSize) - tileSize + tileSize
 
                 let leftTop = SIMD3<Float>(leftPointX, topPointY, 1)
                 let rightTop = SIMD3<Float>(rightPointX, topPointY, 1)

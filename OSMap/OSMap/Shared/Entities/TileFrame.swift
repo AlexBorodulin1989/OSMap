@@ -53,7 +53,7 @@ class TileFrame: RenderItem {
     var x: Float = 0.0 {
         didSet {
             deltaX = (x - center.x) / (initialCameraDist - cameraOffset)
-            if deltaX <= -1 || deltaX >= 1 {
+            if deltaX <= -tileSize || deltaX >= tileSize {
                 loadImage()
             }
         }
@@ -63,7 +63,7 @@ class TileFrame: RenderItem {
     {
         didSet {
             deltaY = (y - center.y) / (initialCameraDist - cameraOffset)
-            if deltaY <= -1 || deltaY >= 1 {
+            if deltaY <= -tileSize || deltaY >= tileSize {
                 loadImage()
             }
         }
@@ -79,6 +79,8 @@ class TileFrame: RenderItem {
     private var cancellables = Set<AnyCancellable>()
 
     let device: MTLDevice! //need to delete added only for quick solution
+
+    private let tileSize: Float
 
     static var vertexDescriptor: MTLVertexDescriptor {
         let vertDescriptor = MTLVertexDescriptor()
@@ -98,20 +100,24 @@ class TileFrame: RenderItem {
     required init(device: MTLDevice, params: Any...) {
         self.device = device
 
-        if let params = params.first as? [Int] {
-            self.texture = Texture(device: device, imageName: "no_img.png")
-            column = params[1]
-            row = params[2]
+        self.texture = Texture(device: device, imageName: "no_img.png")
 
-            self.loadImage()
-        } else {
-            row = 0
-            column = 0
+        guard let tileSize = params[0] as? Float,
+              let column = params[1] as? Int,
+              let row = params[2] as? Int
+        else {
+            fatalError()
         }
+
+        self.tileSize = tileSize
+        self.column = column
+        self.row = row
+
+        self.loadImage()
     }
 
     func loadImage() {
-        let tilesPerDimension = NSDecimalNumber(decimal: pow(2.0, zoom) + MapFrame.Constants.epsilon).intValue
+        let tilesPerDimension = NSDecimalNumber(decimal: pow(2.0, zoom) + MapFrame.Constants.epsilon).intValue + 2
 
         let firstTileIndexRow = Int(round((y + 1) * 0.5 * Float(tilesPerDimension)))
         let firstTileIndexColumn = Int(round((x + 1) * 0.5 * Float(tilesPerDimension)))
@@ -127,7 +133,7 @@ class TileFrame: RenderItem {
 
         center = Position(x: Float(firstTileIndexColumn) * tileSize - 1, y: Float(firstTileIndexRow) * tileSize - 1)
 
-        let request = URLRequest(url: URL(string: "https://tile.openstreetmap.org/\(zoom)/\(firstTileIndexColumn + column)/\(firstTileIndexRow + row).png")!)
+        let request = URLRequest(url: URL(string: "https://tile.openstreetmap.org/\(zoom)/\(firstTileIndexColumn + column - 1)/\(firstTileIndexRow + row - 1).png")!)
         let publisher: URLSession.RequestTilePublisher = URLSession.RequestTilePublisher(urlRequest: request)
         publisher
             .sink { error in
