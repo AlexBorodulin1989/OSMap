@@ -126,6 +126,8 @@ class TileFrame: RenderItem {
             firstTileIndexColumn <= 0 ||
             firstTileIndexRow >= tilesPerDimension ||
             firstTileIndexColumn >= tilesPerDimension {
+
+            self.texture = Texture(device: device, imageName: "no_img.png")
             return
         }
 
