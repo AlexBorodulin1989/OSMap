@@ -53,6 +53,7 @@ class TileFrame: RenderItem {
     var x: Float = 0.0 {
         didSet {
             deltaX = (x - center.x) / (initialCameraDist - cameraOffset)
+            //print("\(deltaX) \(x)")
             if deltaX <= -tileSize || deltaX >= tileSize {
                 loadImage()
             }
@@ -117,25 +118,25 @@ class TileFrame: RenderItem {
     }
 
     func loadImage() {
-        let tilesPerDimension = NSDecimalNumber(decimal: pow(2.0, zoom) + MapFrame.Constants.epsilon).intValue + 2
+        let visibleTilesPerDimension = NSDecimalNumber(decimal: pow(2.0, zoom) + MapFrame.Constants.epsilon).intValue
+        let tileSize = ndcSize / Float(visibleTilesPerDimension)
 
-        let firstTileIndexRow = Int(round((y + 1) * 0.5 * Float(tilesPerDimension)))
-        let firstTileIndexColumn = Int(round((x + 1) * 0.5 * Float(tilesPerDimension)))
+        let columnTilesCountToCenter = round((x + 1) / tileSize)
+        let rowTilesCountToCenter = round((y + 1) / tileSize)
 
-        if firstTileIndexRow <= 0 ||
-            firstTileIndexColumn <= 0 ||
-            firstTileIndexRow >= tilesPerDimension ||
-            firstTileIndexColumn >= tilesPerDimension {
+        center = Position(x: columnTilesCountToCenter * tileSize - 1, y: rowTilesCountToCenter * tileSize - 1)
 
+        print("\(row) \(column)")
+
+        let columnTileIndex = Int(columnTilesCountToCenter) + column
+        let rowTileIndex = Int(rowTilesCountToCenter) + row
+
+        if columnTileIndex < 0 || rowTileIndex < 0 ||  columnTileIndex >= visibleTilesPerDimension || rowTileIndex > visibleTilesPerDimension {
             self.texture = Texture(device: device, imageName: "no_img.png")
             return
         }
 
-        let tileSize = ndcSize / Float(tilesPerDimension)
-
-        center = Position(x: Float(firstTileIndexColumn) * tileSize - 1, y: Float(firstTileIndexRow) * tileSize - 1)
-
-        let request = URLRequest(url: URL(string: "https://tile.openstreetmap.org/\(zoom)/\(firstTileIndexColumn + column - 1)/\(firstTileIndexRow + row - 1).png")!)
+        let request = URLRequest(url: URL(string: "https://tile.openstreetmap.org/\(zoom)/\(columnTileIndex)/\(rowTileIndex).png")!)
         let publisher: URLSession.RequestTilePublisher = URLSession.RequestTilePublisher(urlRequest: request)
         publisher
             .sink { error in
@@ -148,7 +149,7 @@ class TileFrame: RenderItem {
                     }
                     guard let image = NSImage(data: data)
                     else {
-                        print("Dont load image")
+                        self.texture = Texture(device: self.device, imageName: "no_img.png")
                         return
                     }
                     var imageRect = CGRect(x: 0, y: 0, width: image.size.width, height: image.size.height)
@@ -286,6 +287,8 @@ class TileFrame: RenderItem {
             SIMD4<Float>(-deltaX, deltaY, -camOffset, 1)
         ])
 
+        print(camOffset)
+
 
         var cam = Camera(projection: projMatrix, view: viewMatrix)
 
@@ -294,6 +297,7 @@ class TileFrame: RenderItem {
                                index: 1)
 
         encoder.setVertexBuffer(vertBuffer, offset: 0, index: 0)
+        //encoder.setTriangleFillMode(.lines)
         encoder.drawIndexedPrimitives(type: .triangle,
                                             indexCount: 6,
                                             indexType: .uint16,
