@@ -39,7 +39,6 @@ class TileFrame: RenderItem {
     var zoom: Int = MapFrame.Constants.initialZoom {
         didSet {
             if oldValue != zoom {
-                self.texture = Texture(device: device, imageName: "no_img.png")
                 loadImage()
             }
         }
