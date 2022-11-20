@@ -59,8 +59,6 @@ final class MapFrame: RenderItem {
             cameraDistance = cameraDistance*camDistInverted
             let zoom = initialCameraDist / cameraDistance
 
-            let camOffset = initialCameraDist - cameraDistance
-
             let deltaXScreen = Float((leftMouseDragged?.deltaX ?? 0) * screenSizeToNDCRatio) / zoom
             let deltaYScreen = Float((leftMouseDragged?.deltaY ?? 0) * screenSizeToNDCRatio) / zoom
 
