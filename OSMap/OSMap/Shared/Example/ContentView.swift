@@ -9,7 +9,13 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        OSMapView()
+        ZStack {
+            OSMapView()
+            Rectangle()
+                .frame(width: 5, height: 5)
+                .foregroundColor(.red)
+        }
+
     }
 }
 

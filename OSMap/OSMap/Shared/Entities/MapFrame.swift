@@ -25,7 +25,60 @@ final class MapFrame: RenderItem {
 
     private let initialCameraDist: Float = 1
 
-    private var zoom: Int = MapFrame.Constants.initialZoom
+    private var zoom: Int = MapFrame.Constants.initialZoom {
+        didSet {
+            if oldValue < zoom {
+                x = center.x + x / Float(pow(2, Float(oldValue - Constants.initialZoom)))
+                y = center.y + y / Float(pow(2, Float(oldValue - Constants.initialZoom)))
+                let visibleTilesPerDimension = NSDecimalNumber(decimal: pow(2.0, zoom) + MapFrame.Constants.epsilon).intValue
+                let zoomTileSize = ndcSize / Float(visibleTilesPerDimension)
+
+                let columnTilesCountToCenter = round((x + 1) / zoomTileSize)
+                let rowTilesCountToCenter = round((y + 1) / zoomTileSize)
+
+                center = Position(x: columnTilesCountToCenter * zoomTileSize - 1, y: rowTilesCountToCenter * zoomTileSize - 1)
+                x = (x - center.x) * Float(pow(2, Float(zoom - Constants.initialZoom)))
+                y = (y - center.y) * Float(pow(2, Float(zoom - Constants.initialZoom)))
+
+                tiles.flatMap{$0}.forEach {[weak self] tile in
+                    tile.cameraOffset = self?.cameraOffset ?? 0
+                    tile.zoom = zoom
+
+                    tile.x = x
+                    tile.y = y
+                    tile.center = center
+                    tile.loadImage()
+                }
+            } else if oldValue > zoom {
+                x = center.x + x / Float(pow(2, Float(oldValue - Constants.initialZoom)))
+                y = center.y + y / Float(pow(2, Float(oldValue - Constants.initialZoom)))
+                let visibleTilesPerDimension = NSDecimalNumber(decimal: pow(2.0, zoom) + MapFrame.Constants.epsilon).intValue
+                let zoomTileSize = ndcSize / Float(visibleTilesPerDimension)
+
+                let columnTilesCountToCenter = round((x + 1) / zoomTileSize)
+                let rowTilesCountToCenter = round((y + 1) / zoomTileSize)
+
+                center = Position(x: columnTilesCountToCenter * zoomTileSize - 1, y: rowTilesCountToCenter * zoomTileSize - 1)
+                x = (x - center.x) * Float(pow(2, Float(zoom - Constants.initialZoom)))
+                y = (y - center.y) * Float(pow(2, Float(zoom - Constants.initialZoom)))
+
+                tiles.flatMap{$0}.forEach {[weak self] tile in
+                    tile.cameraOffset = self?.cameraOffset ?? 0
+                    tile.zoom = zoom
+
+                    tile.x = x
+                    tile.y = y
+                    tile.center = center
+                    tile.loadImage()
+                }
+            }
+        }
+    }
+
+    private var center = Position(x: 0, y: 0)
+
+    private let ndcSize: Float = 2
+    let tileSize: Float
 
     var cameraOffset: Float = 0.0 {
         didSet {
@@ -57,13 +110,53 @@ final class MapFrame: RenderItem {
             let camDistInverted = NSDecimalNumber(decimal: pow(2.0, zoom - MapFrame.Constants.initialZoom)).floatValue
 
             cameraDistance = cameraDistance*camDistInverted
-            let zoom = initialCameraDist / cameraDistance
 
-            let deltaXScreen = Float((leftMouseDragged?.deltaX ?? 0) * screenSizeToNDCRatio) / zoom
-            let deltaYScreen = Float((leftMouseDragged?.deltaY ?? 0) * screenSizeToNDCRatio) / zoom
+            x -= Float((leftMouseDragged?.deltaX ?? 0) * screenSizeToNDCRatio) * cameraDistance
+            y -= Float((leftMouseDragged?.deltaY ?? 0) * screenSizeToNDCRatio) * cameraDistance
 
-            x -= deltaXScreen * (initialCameraDist - cameraOffset)
-            y -= deltaYScreen * (initialCameraDist - cameraOffset)
+            print(x)
+
+            if x < -tileSize || x > tileSize {
+                let tileOffset: Float = x < -tileSize ? -1 : 1
+                let visibleTilesPerDimension = NSDecimalNumber(decimal: pow(2.0, zoom) + MapFrame.Constants.epsilon).intValue
+                let zoomTileSize = ndcSize / Float(visibleTilesPerDimension)
+
+                let columnTilesCountToCenter = round((center.x + 1) / zoomTileSize) + tileOffset
+
+                center = Position(x: columnTilesCountToCenter * zoomTileSize - 1, y: center.y)
+
+                tiles.flatMap{$0}.forEach {[weak self] tile in
+                    tile.cameraOffset = self?.cameraOffset ?? 0
+                    tile.zoom = zoom
+
+                    tile.x = x
+                    tile.y = y
+                    tile.center = center
+                    tile.loadImage()
+                }
+                x -= tileOffset * tileSize
+            }
+
+            if y < -tileSize || y > tileSize {
+                let tileOffset: Float = y < -tileSize ? -1 : 1
+                let visibleTilesPerDimension = NSDecimalNumber(decimal: pow(2.0, zoom) + MapFrame.Constants.epsilon).intValue
+                let zoomTileSize = ndcSize / Float(visibleTilesPerDimension)
+
+                let rowTilesCountToCenter = round((center.y + 1) / zoomTileSize) + tileOffset
+
+                center = Position(x: center.x, y: rowTilesCountToCenter * zoomTileSize - 1)
+
+                tiles.flatMap{$0}.forEach {[weak self] tile in
+                    tile.cameraOffset = self?.cameraOffset ?? 0
+                    tile.zoom = zoom
+
+                    tile.x = x
+                    tile.y = y
+                    tile.center = center
+                    tile.loadImage()
+                }
+                y -= tileOffset * tileSize
+            }
         }
     }
 
@@ -76,7 +169,7 @@ final class MapFrame: RenderItem {
 
         pipelineState = TileFrame.pipelineState(device: device, pixelColorFormat: .bgra8Unorm)
 
-        let tileSize: Float = 2 / Float(visibleTilesCountPerDim)
+        tileSize = 2 / Float(visibleTilesCountPerDim)
 
         for column in 0..<(visibleTilesCountPerDim + 2) {
             var columnTiles = [TileFrame]()
@@ -153,6 +246,7 @@ extension MapFrame {
 
             tile.x = x
             tile.y = y
+            tile.center = center
             tile.draw(engine: engine, encoder: encoder)
         }
     }

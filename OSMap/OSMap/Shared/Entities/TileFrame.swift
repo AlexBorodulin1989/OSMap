@@ -49,25 +49,8 @@ class TileFrame: RenderItem {
     let row: Int
     let column: Int
 
-    var x: Float = 0.0 {
-        didSet {
-            deltaX = (x - center.x) / (initialCameraDist - cameraOffset)
-            //print("\(deltaX) \(x)")
-            if deltaX <= -tileSize || deltaX >= tileSize {
-                loadImage()
-            }
-        }
-    }
-
+    var x: Float = 0.0
     var y: Float = 0.0
-    {
-        didSet {
-            deltaY = (y - center.y) / (initialCameraDist - cameraOffset)
-            if deltaY <= -tileSize || deltaY >= tileSize {
-                loadImage()
-            }
-        }
-    }
 
     var deltaX: Float = 0.0
     var deltaY: Float = 0.0
@@ -120,12 +103,8 @@ class TileFrame: RenderItem {
         let visibleTilesPerDimension = NSDecimalNumber(decimal: pow(2.0, zoom) + MapFrame.Constants.epsilon).intValue
         let tileSize = ndcSize / Float(visibleTilesPerDimension)
 
-        let columnTilesCountToCenter = round((x + 1) / tileSize)
-        let rowTilesCountToCenter = round((y + 1) / tileSize)
-
-        center = Position(x: columnTilesCountToCenter * tileSize - 1, y: rowTilesCountToCenter * tileSize - 1)
-
-        print("\(row) \(column)")
+        let columnTilesCountToCenter = round((center.x + 1) / tileSize)
+        let rowTilesCountToCenter = round((center.y + 1) / tileSize)
 
         let columnTileIndex = Int(columnTilesCountToCenter) + column
         let rowTileIndex = Int(rowTilesCountToCenter) + row
@@ -283,11 +262,8 @@ class TileFrame: RenderItem {
             SIMD4<Float>(1, 0, 0, 0),
             SIMD4<Float>(0, 1, 0, 0),
             SIMD4<Float>(0, 0, 1, 0),
-            SIMD4<Float>(-deltaX, deltaY, -camOffset, 1)
+            SIMD4<Float>(-x, y, -camOffset, 1)
         ])
-
-        print(camOffset)
-
 
         var cam = Camera(projection: projMatrix, view: viewMatrix)
 
@@ -296,7 +272,6 @@ class TileFrame: RenderItem {
                                index: 1)
 
         encoder.setVertexBuffer(vertBuffer, offset: 0, index: 0)
-        //encoder.setTriangleFillMode(.lines)
         encoder.drawIndexedPrimitives(type: .triangle,
                                             indexCount: 6,
                                             indexType: .uint16,
